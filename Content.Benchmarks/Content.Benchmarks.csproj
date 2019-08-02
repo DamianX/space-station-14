@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <PropertyGroup>
     <OutputPath>..\bin\Content.Benchmarks\</OutputPath>
@@ -6,6 +6,11 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Platforms>x64</Platforms>
     <OutputType>Exe</OutputType>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
