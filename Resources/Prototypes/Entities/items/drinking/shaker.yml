@@ -1,0 +1,12 @@
+﻿- type: entity
+  parent: ReagentItem
+  id: shaker
+  name: shaker
+  description: A metal shaker to mix drinks in.
+  components:
+  - type: Sprite
+    texture: Objects/items/drinking/shaker.png
+  - type: Icon
+    texture: Objects/items/drinking/shaker.png
+  - type: Item
+    Size: 5

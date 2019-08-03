@@ -1,0 +1,12 @@
+﻿- type: entity
+  parent: ReagentItem
+  id: drinkingGlass
+  name: drinking glass
+  description: Your standard drinking glass.
+  components:
+  - type: Sprite
+    texture: Objects/items/drinking/drinking_glass.png
+  - type: Icon
+    texture: Objects/items/drinking/drinking_glass.png
+  - type: Item
+    Size: 5
