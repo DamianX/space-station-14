@@ -1,8 +1,10 @@
 ﻿using System;
+using Content.Server.GameObjects.EntitySystems;
 using Content.Shared.Chemistry;
 using Content.Shared.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Interfaces.GameObjects;
+using Robust.Shared.Utility;
 
 namespace Content.Server.GameObjects.Components.Chemistry
 {
@@ -10,8 +12,13 @@ namespace Content.Server.GameObjects.Components.Chemistry
     ///     Shared ECS component that manages a liquid solution of reagents.
     /// </summary>
     [RegisterComponent]
-    internal class SolutionComponent : Shared.GameObjects.Components.Chemistry.SolutionComponent
+    internal class SolutionComponent : Shared.GameObjects.Components.Chemistry.SolutionComponent, IExamine
     {
+        void IExamine.Examine(FormattedMessage message)
+        {
+            message.AddText($"It contains {CurrentVolume}/{MaxVolume} units of a solution.");
+        }
+
         /// <summary>
         ///     Transfers solution from the held container to the target container.
         /// </summary>
