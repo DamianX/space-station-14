@@ -1,0 +1,35 @@
+- type: entity
+  id: Jukebox
+  name: Jukebox
+  components:
+    - type: Clickable
+    - type: Collidable
+      shapes:
+        - !type:PhysShapeAabb
+          bounds: "-0.5,-0.25,0.5,0.25"
+          mask: 19
+          layer: 16
+    - type: Icon
+      sprite: Buildings/jukebox.rsi
+      state: normal
+    - type: Jukebox
+    - type: Sound
+    - type: UserInterface
+      interfaces:
+        - key: enum.JukeboxUiKey.Key
+          type: JukeboxBoundUserInterface
+    - type: PowerDevice
+      priority: Low
+
+    - type: Sprite
+      sprite: Buildings/jukebox.rsi
+      layers:
+        - state: normal
+          map: ["enum.JukeboxVisualLayers.Base"]
+        - state: running-overlay
+          visible: false
+          map: ["enum.JukeboxVisualLayers.Overlay"]
+
+    - type: Appearance
+      visuals:
+        - type: JukeboxVisualizer2D
