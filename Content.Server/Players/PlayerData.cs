@@ -1,4 +1,5 @@
 ﻿using Content.Server.Mobs;
+using Content.Shared.Preferences;
 using Robust.Server.Interfaces.Player;
 using Robust.Shared.IoC;
 using Robust.Shared.Network;
@@ -17,6 +18,9 @@ namespace Content.Server.Players
         /// </summary>
         [ViewVariables]
         public NetSessionId SessionId { get; }
+
+        [ViewVariables]
+        public PlayerPrefs Prefs { get; set; }
 
         /// <summary>
         ///     The currently occupied mind of the player owning this data.

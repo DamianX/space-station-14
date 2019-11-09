@@ -19,6 +19,7 @@ namespace Content.Client.UserInterface
         public ChatBox Chat { get; }
         public ItemList OnlinePlayerItemList { get; }
         public ServerInfo ServerInfo { get; }
+        public Button PreferencesButton { get; }
 
         public LobbyGui(ILocalizationManager localization, IResourceCache resourceCache)
         {
@@ -98,11 +99,12 @@ namespace Content.Client.UserInterface
                 SeparationOverride = 0,
                 Children =
                 {
-                    new Placeholder(resourceCache)
+                    (PreferencesButton = new Button()
                     {
                         SizeFlagsVertical = SizeFlags.FillExpand,
-                        PlaceholderText = localization.GetString("Character UI\nPlaceholder")
-                    },
+                        Text = localization.GetString("Preferences"),
+                        StyleClasses = {NanoStyle.StyleClassButtonBig}
+                    }),
 
                     new StripeBack
                     {

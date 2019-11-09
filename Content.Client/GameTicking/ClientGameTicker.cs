@@ -47,6 +47,7 @@ namespace Content.Client.GameTicking
         [ViewVariables] private bool _gameStarted;
         [ViewVariables] private DateTime _startTime;
         [ViewVariables] private string _serverInfoBlob;
+        [ViewVariables] private PreferencesGui _prefsGui;
 
         public void Initialize()
         {
@@ -188,6 +189,14 @@ namespace Content.Client.GameTicking
 
             _tickerState = TickerState.InLobby;
 
+            _prefsGui = new PreferencesGui(_localization, _resourceCache);
+            _prefsGui.CloseButton.OnPressed += args =>
+            {
+                _userInterfaceManager.StateRoot.RemoveChild(_prefsGui);
+                _userInterfaceManager.StateRoot.AddChild(_lobby);
+            };
+            _prefsGui.SetAnchorAndMarginPreset(Control.LayoutPreset.Wide, margin: 20);
+
             _lobby = new LobbyGui(_localization, _resourceCache);
             _userInterfaceManager.StateRoot.AddChild(_lobby);
 
@@ -203,6 +212,11 @@ namespace Content.Client.GameTicking
 
             _updateLobbyUi();
 
+            _lobby.PreferencesButton.OnPressed += args =>
+            {
+                _userInterfaceManager.StateRoot.RemoveChild(_lobby);
+                _userInterfaceManager.StateRoot.AddChild(_prefsGui);
+            };
             _lobby.ObserveButton.OnPressed += args => _console.ProcessCommand("observe");
             _lobby.ReadyButton.OnPressed += args =>
             {
