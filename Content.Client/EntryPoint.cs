@@ -7,6 +7,7 @@ using Content.Client.Interfaces;
 using Content.Client.Interfaces.Chat;
 using Content.Client.Interfaces.Parallax;
 using Content.Client.Parallax;
+using Content.Client.Preferences;
 using Content.Client.Sandbox;
 using Content.Client.UserInterface;
 using Content.Shared.GameObjects.Components;
@@ -140,6 +141,7 @@ namespace Content.Client
             IoCManager.Register<IChatManager, ChatManager>();
             IoCManager.Register<IEscapeMenuOwner, EscapeMenuOwner>();
             IoCManager.Register<ISandboxManager, SandboxManager>();
+            IoCManager.Register<IClientPreferencesManager, ClientPreferencesManager>();
 
             if (TestingCallbacks != null)
             {
@@ -197,6 +199,7 @@ namespace Content.Client
             var inputMan = IoCManager.Resolve<IInputManager>();
             ContentContexts.SetupContexts(inputMan.Contexts);
 
+            IoCManager.Resolve<IClientPreferencesManager>().Initialize();
             IoCManager.Resolve<IGameHud>().Initialize();
             IoCManager.Resolve<IClientNotifyManager>().Initialize();
             IoCManager.Resolve<IClientGameTicker>().Initialize();

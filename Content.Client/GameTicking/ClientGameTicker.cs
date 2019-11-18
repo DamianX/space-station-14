@@ -37,6 +37,7 @@ namespace Content.Client.GameTicking
         [Dependency] private IResourceCache _resourceCache;
         [Dependency] private IPlayerManager _playerManager;
         [Dependency] private IGameHud _gameHud;
+        [Dependency] private IClientPreferencesManager _prefsManager;
 #pragma warning restore 649
 
         [ViewVariables] private bool _areWeReady;
@@ -189,7 +190,7 @@ namespace Content.Client.GameTicking
 
             _tickerState = TickerState.InLobby;
 
-            _prefsGui = new PreferencesGui(_localization, _resourceCache);
+            _prefsGui = new PreferencesGui(_localization, _resourceCache, _prefsManager);
             _prefsGui.CloseButton.OnPressed += args =>
             {
                 _userInterfaceManager.StateRoot.RemoveChild(_prefsGui);

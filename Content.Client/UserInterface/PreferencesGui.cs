@@ -1,5 +1,7 @@
 using System.Collections.Immutable;
+using Content.Client.Interfaces;
 using Content.Client.UserInterface.Preferences;
+using Content.Client.UserInterface.Preferences.Character;
 using Content.Client.Utility;
 using Robust.Client.Graphics.Drawing;
 using Robust.Client.Interfaces.ResourceManagement;
@@ -15,7 +17,9 @@ namespace Content.Client.UserInterface
     {
         public Button CloseButton { get; }
 
-        public PreferencesGui(ILocalizationManager localization, IResourceCache resourceCache)
+        public PreferencesGui(ILocalizationManager localization,
+            IResourceCache resourceCache,
+            IClientPreferencesManager prefsManager)
         {
             var panelTex = resourceCache.GetTexture("/Nano/button.svg.96dpi.png");
             var back = new StyleBoxTexture
@@ -63,8 +67,14 @@ namespace Content.Client.UserInterface
             tabs.AddChild(new PreferencesPage(localization));
             tabs.SetTabTitle(0, "Settings");
 
-            tabs.AddChild(new CharacterPage());
-            tabs.SetTabTitle(1, "Character");
+            tabs.AddChild(new SlotsPage(localization, prefsManager));
+            tabs.SetTabTitle(1, "Save / Load");
+
+            tabs.AddChild(new IdentityPage(localization, prefsManager));
+            tabs.SetTabTitle(2, "Identity");
+
+            tabs.AddChild(new JobPage());
+            tabs.SetTabTitle(3, "Occupation");
         }
     }
 }

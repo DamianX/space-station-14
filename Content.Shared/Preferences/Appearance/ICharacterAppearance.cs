@@ -1,7 +1,8 @@
+using Robust.Shared.Interfaces.Serialization;
+
 namespace Content.Shared.Preferences.Appearance
 {
-    public class ICharacterAppearance
+    public interface ICharacterAppearance : IExposeData
     {
-        
     }
 }

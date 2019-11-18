@@ -4,6 +4,7 @@ using System.Linq;
 using Content.Server.GameObjects;
 using Content.Server.GameObjects.Components.Markers;
 using Content.Server.GameTicking.GamePresets;
+using Content.Server.Interfaces;
 using Content.Server.Interfaces.Chat;
 using Content.Server.Interfaces.GameTicking;
 using Content.Server.Mobs;
@@ -27,6 +28,7 @@ using Robust.Shared.Localization;
 using Robust.Shared.Log;
 using Robust.Shared.Map;
 using Robust.Shared.Maths;
+using Robust.Shared.Network;
 using Robust.Shared.Random;
 using Robust.Shared.Timers;
 using Robust.Shared.Timing;
@@ -93,6 +95,7 @@ namespace Content.Server.GameTicking
         [Dependency] private IDynamicTypeFactory _dynamicTypeFactory;
         [Dependency] private readonly ILocalizationManager _localization;
         [Dependency] private readonly IRobustRandom _robustRandom;
+        [Dependency] private readonly IServerPreferencesManager _prefsManager;
 #pragma warning restore 649
 
         public void Initialize()
@@ -461,6 +464,7 @@ namespace Content.Server.GameTicking
         {
             _playersInLobby.Add(session, false);
 
+            _prefsManager.SendPayloadToClient(session);
             _netManager.ServerSendMessage(_netManager.CreateNetMessage<MsgTickerJoinLobby>(), session.ConnectedClient);
             _netManager.ServerSendMessage(_getStatusMsg(session), session.ConnectedClient);
             _netManager.ServerSendMessage(GetInfoMsg(), session.ConnectedClient);
