@@ -15,12 +15,12 @@ namespace Content.Shared.Preferences.Appearance
         public string FacialHairPrototypeId;
         public void ExposeData(ObjectSerializer serializer)
         {
-            serializer.DataField(ref EyeColor, "eyeColor", Color.Black);
-            serializer.DataField(ref HairColor, "hairColor", Color.Black);
-            serializer.DataField(ref FacialHairColor, "facialHairColor", Color.Black);
-            serializer.DataField(ref SkinColor, "skinColor", Color.Pink);
-            serializer.DataField(ref HairPrototypeId, "hairStyle", string.Empty);
-            serializer.DataField(ref FacialHairPrototypeId, "facialHairStyle", string.Empty);
+            serializer.DataField(ref EyeColor, "eyeColor", Color.Black, true);
+            serializer.DataField(ref HairColor, "hairColor", Color.Black, true);
+            serializer.DataField(ref FacialHairColor, "facialHairColor", Color.Black, true);
+            serializer.DataField(ref SkinColor, "skinColor", Color.Pink, true);
+            serializer.DataField(ref HairPrototypeId, "hairStyle", string.Empty, true);
+            serializer.DataField(ref FacialHairPrototypeId, "facialHairStyle", string.Empty, true);
         }
     }
 }

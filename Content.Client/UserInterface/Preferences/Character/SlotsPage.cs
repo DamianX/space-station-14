@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using Content.Client.Interfaces;
 using Content.Shared.Preferences;
@@ -29,7 +30,7 @@ namespace Content.Client.UserInterface.Preferences.Character
             var prefs = prefsMgr.Get();
 
             var index = 0;
-            foreach (var character in prefs.Characters)
+            for (var i = 0; i < _prefsMgr.MaxCharacterSlots(); i++)
             {
                 var characterHBox = new HBoxContainer();
                 _vBox.AddChild(characterHBox);
@@ -45,7 +46,7 @@ namespace Content.Client.UserInterface.Preferences.Character
                 var indexCopy = index;
                 loadButton.OnPressed += args =>
                 {
-                    prefs.SelectedCharacter = indexCopy;
+                    prefs.SelectedCharacterIndex = indexCopy;
                     _prefsMgr.Save();
                     UpdateButtons(prefs);
                 };
@@ -68,11 +69,11 @@ namespace Content.Client.UserInterface.Preferences.Character
             var index = 0;
             foreach (var (label, load, delete) in _buttons)
             {
-                var character = prefs.Characters[index];
-                label.Text = character?.Name() ??
+                var character = prefs.Characters.ElementAtOrDefault(index);
+                label.Text = character?.Name ??
                              string.Format(_localization.GetString("SLOT {0} EMPTY"), index + 1);
-                load.Visible = prefs.SelectedCharacter != index;
-                delete.Visible = prefs.Characters[index] != null;
+                load.Visible = prefs.SelectedCharacterIndex != index;
+                delete.Visible = character != null;
                 index++;
             }
         }

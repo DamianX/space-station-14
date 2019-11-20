@@ -18,6 +18,11 @@
     layers:
     - sprite: Mob/human.rsi
       state: male
+    - map: ["enum.HumanoidVisualLayers.Hair"]
+      sprite: Mob/human_hair.rsi
+      state: bigafro
+    - map: ["enum.HumanoidVisualLayers.FacialHair"]
+      sprite: Mob/human_facial_hair.rsi
     - map: ["enum.Slots.INNERCLOTHING"]
     - map: ["enum.Slots.IDCARD"]
     - map: ["enum.Slots.SHOES"]
@@ -42,7 +47,7 @@
   - type: Collidable
     shapes:
     - !type:PhysShapeAabb
-      bounds: "-0.5,-0.25,-0.05,0.25" 
+      bounds: "-0.5,-0.25,-0.05,0.25"
       mask: 19
       layer: 2
 
@@ -64,6 +69,7 @@
   - type: Appearance
     visuals:
     - type: SpeciesVisualizer2D
+    - type: HumanoidVisualizer2D
 
   - type: CombatMode
   - type: Teleportable

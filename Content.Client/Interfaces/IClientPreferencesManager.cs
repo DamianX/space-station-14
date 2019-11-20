@@ -8,5 +8,6 @@ namespace Content.Client.Interfaces
         void Initialize();
         PlayerPrefs Get();
         void Save();
+        int MaxCharacterSlots();
     }
 }

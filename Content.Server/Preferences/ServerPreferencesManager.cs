@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-using Content.Server.GameObjects;
 using Content.Server.Interfaces;
 using Content.Shared.Preferences;
 using Content.Shared.Preferences.Appearance;
@@ -10,9 +10,9 @@ using Robust.Shared.Interfaces.Configuration;
 using Robust.Shared.Interfaces.Network;
 using Robust.Shared.Interfaces.Resources;
 using Robust.Shared.IoC;
-using Robust.Shared.Log;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
+using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
 namespace Content.Server.Preferences
@@ -38,6 +38,7 @@ namespace Content.Server.Preferences
         {
             var msg = _netManager.CreateNetMessage<MsgPreferencesPayload>();
             msg.Prefs = Get(session.SessionId.Username);
+            msg.MaxCharacters = _configuration.GetCVar<int>("game.maxcharacterslots");
             _netManager.ServerSendMessage(msg, session.ConnectedClient);
         }
 
@@ -54,13 +55,17 @@ namespace Content.Server.Preferences
                 new HumanoidCharacterProfile
                 {
                     Age = 18,
-                    CharacterAppearance = new HumanoidCharacterAppearance(),
+                    CharacterAppearance = new HumanoidCharacterAppearance
+                    {
+                        EyeColor = Color.Green,
+                        FacialHairColor = Color.Black,
+                        HairColor = Color.White
+                    },
                     Gender = Gender.Male,
                     Name = "John Doe"
                 }
             };
-            prefs.MaxCharacters = _configuration.GetCVar<int>("game.maxcharacterslots");
-            prefs.SelectedCharacter = 0;
+            prefs.SelectedCharacterIndex = 0;
             return prefs;
         }
 
@@ -113,11 +118,9 @@ namespace Content.Server.Preferences
             var configMaxCharacters = _configuration.GetCVar<int>("game.maxcharacterslots");
             if (prefs.Characters is null)
                 return false;
-            if (prefs.MaxCharacters != configMaxCharacters)
+            if (prefs.SelectedCharacterIndex > configMaxCharacters)
                 return false;
-            if (prefs.SelectedCharacter > configMaxCharacters)
-                return false;
-            if (prefs.SelectedCharacter >= prefs.Characters.Count)
+            if (prefs.SelectedCharacterIndex >= prefs.Characters.Count)
                 return false;
             return true;
         }
@@ -135,10 +138,10 @@ namespace Content.Server.Preferences
             {
                 using (var writer = new StreamWriter(file))
                 {
-                    YamlObjectSerializer serializer = YamlObjectSerializer.NewWriter(new YamlMappingNode());
-                    YamlNode serialized = serializer.TypeToNode(prefs);
+                    var serializer = YamlObjectSerializer.NewWriter(new YamlMappingNode());
+                    var serialized = serializer.TypeToNode(prefs);
                     var yaml = new YamlStream(new YamlDocument(serialized));
-                    yaml.Save(writer, false);
+                    yaml.Save(new YamlMappingFix(new Emitter(writer)), false);
                 }
             }
         }

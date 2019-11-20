@@ -15,8 +15,6 @@ namespace Content.Shared.Preferences
         /// </summary>
         protected class MsgPreferencesPayload : NetMessage
         {
-            public PlayerPrefs Prefs;
-
             #region REQUIRED
 
             public const MsgGroups GROUP = MsgGroups.Command;
@@ -26,8 +24,12 @@ namespace Content.Shared.Preferences
 
             #endregion
 
+            public PlayerPrefs Prefs;
+            public int MaxCharacters;
+
             public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
+                MaxCharacters = buffer.ReadInt32();
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
                 var length = buffer.ReadInt32();
                 var bytes = buffer.ReadBytes(length);
@@ -42,6 +44,7 @@ namespace Content.Shared.Preferences
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
                 using (var stream = new MemoryStream())
                 {
+                    buffer.Write(MaxCharacters);
                     serializer.Serialize(stream, Prefs);
                     buffer.Write((int)stream.Length);
                     buffer.Write(stream.ToArray());

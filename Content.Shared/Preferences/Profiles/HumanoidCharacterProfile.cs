@@ -5,26 +5,50 @@ using ObjectSerializer = Robust.Shared.Serialization.ObjectSerializer;
 
 namespace Content.Shared.Preferences.Profiles
 {
+    public enum HumanoidVisualLayers
+    {
+        Hair,
+        FacialHair
+    }
+
     [Serializable, NetSerializable]
     public class HumanoidCharacterProfile : ICharacterProfile
     {
-        public string Name;
-        public ICharacterAppearance CharacterAppearance;
+        private string _name;
+        private int _age;
+        private Gender _gender;
+        private ICharacterAppearance _characterAppearance;
 
-        public int Age;
+        public string Name
+        {
+            get => _name;
+            set => _name = value;
+        }
 
-        public Gender Gender;
+        public int Age
+        {
+            get => _age;
+            set => _age = value;
+        }
 
-        string ICharacterProfile.Name() => Name;
-        int ICharacterProfile.Age() => Age;
-        Gender ICharacterProfile.Gender() => Gender;
+        public Gender Gender
+        {
+            get => _gender;
+            set => _gender = value;
+        }
 
-        ICharacterAppearance ICharacterProfile.CharacterAppearance() => CharacterAppearance;
+        public ICharacterAppearance CharacterAppearance
+        {
+            get => _characterAppearance;
+            set => _characterAppearance = value;
+        }
+
         public void ExposeData(ObjectSerializer serializer)
         {
-            serializer.DataField(ref Name, "name", string.Empty);
-            serializer.DataField(ref CharacterAppearance, "appearance", null);
-            serializer.DataField(ref Age, "age", 18);
+            serializer.DataField(ref _name, "name", string.Empty, true);
+            serializer.DataField(ref _age, "age", 18, true);
+            serializer.DataField(ref _gender, "gender", Gender.Male, true);
+            serializer.DataField(ref _characterAppearance, "appearance", null, true);
         }
     }
 }

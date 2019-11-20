@@ -11,6 +11,9 @@ using Content.Server.Mobs;
 using Content.Server.Players;
 using Content.Shared;
 using Content.Shared.GameObjects.Components.Inventory;
+using Content.Shared.Preferences.Appearance;
+using Content.Shared.Preferences.Profiles;
+using Robust.Server.GameObjects;
 using Robust.Server.Interfaces.Maps;
 using Robust.Server.Interfaces.Player;
 using Robust.Server.Player;
@@ -266,6 +269,7 @@ namespace Content.Server.GameTicking
         private IEntity _spawnPlayerMob()
         {
             var entity = _entityManager.SpawnEntityAt(PlayerPrototypeName, _getLateJoinSpawnPoint());
+
             if (entity.TryGetComponent(out InventoryComponent inventory))
             {
                 var uniform = _entityManager.SpawnEntity("UniformAssistant");
@@ -446,7 +450,21 @@ namespace Content.Server.GameTicking
             data.Mind = new Mind(session.SessionId);
 
             var mob = _spawnPlayerMob();
+            CustomizePlayerMob(mob, session.SessionId);
             data.Mind.TransferTo(mob);
+        }
+
+        private void CustomizePlayerMob(IEntity mob, NetSessionId sessionId)
+        {
+            var prefs = _prefsManager.Get(sessionId.Username);
+            var appearance = mob.GetComponent<AppearanceComponent>();
+            switch (prefs.SelectedCharacter.CharacterAppearance)
+            {
+                case HumanoidCharacterAppearance humanAppearance:
+                    appearance.SetData(CharacterVisuals.CharacterAppearance, humanAppearance);
+                    break;
+            }
+
         }
 
         private void _spawnObserver(IPlayerSession session)

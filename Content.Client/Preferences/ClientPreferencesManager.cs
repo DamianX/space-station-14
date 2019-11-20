@@ -17,6 +17,7 @@ namespace Content.Client.Preferences
         /// It's null until the server sends <see cref="SharedPreferencesManager.MsgPreferencesPayload"/>
         /// </summary>
         private PlayerPrefs _syncedPrefs;
+        private int _maxCharacterSlots = 0;
 
         public void Initialize()
         {
@@ -27,6 +28,7 @@ namespace Content.Client.Preferences
         private void HandlePreferencesPayload(MsgPreferencesPayload message)
         {
             _syncedPrefs = message.Prefs;
+            _maxCharacterSlots = message.MaxCharacters;
         }
 
         public PlayerPrefs Get()
@@ -39,6 +41,11 @@ namespace Content.Client.Preferences
             var msg = _netManager.CreateNetMessage<MsgPreferencesPayload>();
             msg.Prefs = _syncedPrefs;
             _netManager.ClientSendMessage(msg);
+        }
+
+        public int MaxCharacterSlots()
+        {
+            return _maxCharacterSlots;
         }
     }
 }
