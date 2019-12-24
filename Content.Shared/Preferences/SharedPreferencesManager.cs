@@ -22,10 +22,10 @@ namespace Content.Shared.Preferences
             public MsgPreferencesAndSettings(INetChannel channel) : base(NAME, GROUP) { }
 
             #endregion
-
+#nullable disable
             public PlayerPreferences Preferences;
             public GameSettings Settings;
-
+#nullable restore
             public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
@@ -101,10 +101,10 @@ namespace Content.Shared.Preferences
             public MsgUpdateCharacter(INetChannel channel) : base(NAME, GROUP) { }
 
             #endregion
-
+#nullable disable
             public int Slot;
             public ICharacterProfile Profile;
-
+#nullable restore
             public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
                 Slot = buffer.ReadInt32();

@@ -11,8 +11,10 @@
     public class EntryPoint : GameShared
     {
 #pragma warning disable 649
+#nullable disable
         [Dependency] private readonly IPrototypeManager _prototypeManager;
         [Dependency] private readonly ITileDefinitionManager _tileDefinitionManager;
+#nullable restore
 #pragma warning restore 649
 
         public override void Init()

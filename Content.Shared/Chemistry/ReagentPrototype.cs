@@ -12,6 +12,7 @@ namespace Content.Shared.Chemistry
     [Prototype("reagent")]
     public class ReagentPrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
 #pragma warning disable 649
         [Dependency] private readonly IModuleManager _moduleManager;
 #pragma warning restore 649
@@ -21,7 +22,7 @@ namespace Content.Shared.Chemistry
         private string _description;
         private Color _substanceColor;
         private List<IMetabolizable> _metabolism;
-
+#nullable restore
         public string ID => _id;
         public string Name => _name;
         public string Description => _description;

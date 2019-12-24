@@ -13,7 +13,7 @@ namespace Content.Shared.Maps
     public sealed class ContentTileDefinition : IPrototype, IIndexedPrototype, ITileDefinition
     {
         string IIndexedPrototype.ID => Name;
-
+#nullable disable
         public string Name { get; private set; }
         public ushort TileId { get; private set; }
         public string DisplayName { get; private set; }
@@ -24,7 +24,7 @@ namespace Content.Shared.Maps
         public string FootstepSounds { get; private set; }
         public float Friction { get; set; }
         public string ItemDropPrototypeName { get; private set; }
-
+#nullable restore
         public void AssignTileId(ushort id)
         {
             TileId = id;

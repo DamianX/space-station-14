@@ -11,6 +11,7 @@ namespace Content.Shared.Construction
     [Prototype("construction")]
     public class ConstructionPrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
         private string _name;
         private string _description;
         private SpriteSpecifier _icon;
@@ -21,7 +22,7 @@ namespace Content.Shared.Construction
         private string _id;
         private string _result;
         private string _placementMode;
-
+#nullable restore
         /// <summary>
         ///     Friendly name displayed in the construction GUI.
         /// </summary>
@@ -79,7 +80,7 @@ namespace Content.Shared.Construction
             ser.DataField(ref _description, "description", string.Empty);
             ser.DataField(ref _icon, "icon", SpriteSpecifier.Invalid);
             ser.DataField(ref _type, "objecttype", ConstructionType.Structure);
-            ser.DataField(ref _result, "result", null);
+            ser.DataField(ref _result, "result", string.Empty);
             ser.DataField(ref _placementMode, "placementmode", "PlaceFree");
 
             _keywords = ser.ReadDataField<List<string>>("keywords", new List<string>());
@@ -90,8 +91,8 @@ namespace Content.Shared.Construction
             }
 
             {
-                SpriteSpecifier nextIcon = null;
-                ConstructionStep nextBackward = null;
+                SpriteSpecifier? nextIcon = null;
+                ConstructionStep? nextBackward = null;
 
                 foreach (var stepMap in mapping.GetNode<YamlSequenceNode>("steps").Cast<YamlMappingNode>())
                 {
@@ -145,19 +146,19 @@ namespace Content.Shared.Construction
         /// <summary>
         ///     The icon of the construction frame at this stage.
         /// </summary>
-        public readonly SpriteSpecifier Icon;
+        public readonly SpriteSpecifier? Icon;
 
         /// <summary>
         ///     The step that should be completed to move away from this stage to the next one.
         /// </summary>
-        public readonly ConstructionStep Forward;
+        public readonly ConstructionStep? Forward;
 
         /// <summary>
         ///     The optional step that can be completed to move away from this stage to the previous one.
         /// </summary>
-        public readonly ConstructionStep Backward;
+        public readonly ConstructionStep? Backward;
 
-        public ConstructionStage(ConstructionStep forward, SpriteSpecifier icon = null, ConstructionStep backward = null)
+        public ConstructionStage(ConstructionStep? forward, SpriteSpecifier? icon = null, ConstructionStep? backward = null)
         {
             Icon = icon;
             Forward = forward;

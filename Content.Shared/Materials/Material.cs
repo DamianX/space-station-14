@@ -89,7 +89,7 @@ public class Material : IExposeData
                     if (prototype.Material == this) return prototype.ID;
                 }
 
-                return null;
+                return string.Empty;
             }
         }
 
@@ -115,10 +115,11 @@ public class Material : IExposeData
     [Prototype("material")]
     public class MaterialPrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
         public string ID { get; private set; }
 
         public Material Material { get; private set; }
-
+#nullable restore
         public void LoadFrom(YamlMappingNode mapping)
         {
             ID = mapping["id"].AsString();

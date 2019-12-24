@@ -8,9 +8,10 @@ namespace Content.Shared.Audio
     [Prototype("sound_collection")]
     public sealed class SoundCollectionPrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
         public string ID { get; private set; }
         public IReadOnlyList<string> PickFiles { get; private set; }
-
+#nullable enable
         public void LoadFrom(YamlMappingNode mapping)
         {
             ID = mapping.GetNode("id").AsString();

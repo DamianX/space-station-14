@@ -12,6 +12,7 @@ namespace Content.Shared.Prototypes.Cargo
     [NetSerializable, Serializable, Prototype("cargoProduct")]
     public class CargoProductPrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
         private string _id;
         private string _name;
         private string _description;
@@ -20,7 +21,7 @@ namespace Content.Shared.Prototypes.Cargo
         private int _pointCost;
         private string _category;
         private string _group;
-
+#nullable restore
         [ViewVariables]
         public string ID => _id;
 
@@ -102,7 +103,7 @@ namespace Content.Shared.Prototypes.Cargo
             serializer.DataField(ref _id, "id", string.Empty);
             serializer.DataField(ref _description, "description", string.Empty);
             serializer.DataField(ref _icon, "icon", SpriteSpecifier.Invalid);
-            serializer.DataField(ref _product, "product", null);
+            serializer.DataField(ref _product, "product", String.Empty);
             serializer.DataField(ref _pointCost, "cost", 0);
             serializer.DataField(ref _category, "category", string.Empty);
             serializer.DataField(ref _group, "group", string.Empty);

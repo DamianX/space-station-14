@@ -18,8 +18,9 @@ namespace Content.Shared.GameObjects.Components.Research
         public override uint? NetID => ContentNetIDs.LATHE;
 
 #pragma warning disable CS0649
-        [Dependency]
-        protected IPrototypeManager _prototypeManager;
+#nullable disable
+        [Dependency] protected IPrototypeManager _prototypeManager;
+#nullable restore
 #pragma warning restore
 
         public bool CanProduce(LatheRecipePrototype recipe, int quantity = 1)

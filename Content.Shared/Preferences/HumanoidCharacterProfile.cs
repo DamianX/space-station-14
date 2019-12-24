@@ -16,12 +16,12 @@ namespace Content.Shared.Preferences
                 CharacterAppearance = HumanoidCharacterAppearance.Default()
             };
         }
-
+#nullable disable
         public string Name { get; set; }
         public int Age { get; set; }
         public Sex Sex { get; set; }
         public ICharacterAppearance CharacterAppearance { get; set; }
-
+#nullable restore
         public bool MemberwiseEquals(ICharacterProfile maybeOther)
         {
             if (!(maybeOther is HumanoidCharacterProfile other)) return false;

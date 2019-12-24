@@ -96,9 +96,9 @@ namespace Content.Shared
             public MsgTickerLobbyInfo(INetChannel channel) : base(NAME, GROUP) { }
 
             #endregion
-
+#nullable disable
             public string TextBlob { get; set; }
-
+#nullable restore
             public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
                 TextBlob = buffer.ReadString();

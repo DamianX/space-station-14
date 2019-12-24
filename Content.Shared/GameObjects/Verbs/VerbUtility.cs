@@ -25,7 +25,7 @@ namespace Content.Shared.GameObjects
                         continue;
                     }
 
-                    var verb = (Verb)Activator.CreateInstance(nestedType);
+                    var verb = (Verb)Activator.CreateInstance(nestedType)!;
                     yield return (component, verb);
                 }
             }
@@ -45,7 +45,7 @@ namespace Content.Shared.GameObjects
                     {
                         continue;
                     }
-                    yield return (GlobalVerb)Activator.CreateInstance(type);
+                    yield return (GlobalVerb)Activator.CreateInstance(type)!;
                 }
             }
         }

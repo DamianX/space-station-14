@@ -13,6 +13,7 @@ namespace Content.Shared.Research
     [NetSerializable, Serializable, Prototype("latheRecipe")]
     public class LatheRecipePrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
         private string _name;
         private string _id;
         private SpriteSpecifier _icon;
@@ -20,7 +21,7 @@ namespace Content.Shared.Research
         private string _result;
         private int _completeTime;
         private Dictionary<string, int> _requiredMaterials;
-
+#nullable restore
         [ViewVariables]
         public string ID => _id;
 
@@ -99,7 +100,7 @@ namespace Content.Shared.Research
             serializer.DataField(ref _id, "id", string.Empty);
             serializer.DataField(ref _description, "description", string.Empty);
             serializer.DataField(ref _icon, "icon", SpriteSpecifier.Invalid);
-            serializer.DataField(ref _result, "result", null);
+            serializer.DataField(ref _result, "result", string.Empty);
             serializer.DataField(ref _completeTime, "completetime", 2500);
             serializer.DataField(ref _requiredMaterials, "materials", new Dictionary<string, int>());
         }

@@ -46,9 +46,10 @@ namespace Content.Shared.GameObjects.Components.Sound
     [NetSerializable, Serializable]
     public class ScheduledSoundMessage : ComponentMessage
     {
-        public ScheduledSound Schedule;
-        public ScheduledSoundMessage()
+        public ScheduledSound Schedule { get; }
+        public ScheduledSoundMessage(ScheduledSound schedule)
         {
+            Schedule = schedule;
             Directed = true;
         }
     }
@@ -56,9 +57,10 @@ namespace Content.Shared.GameObjects.Components.Sound
     [NetSerializable, Serializable]
     public class StopSoundScheduleMessage : ComponentMessage
     {
-        public string Filename;
-        public StopSoundScheduleMessage()
+        public string Filename { get; }
+        public StopSoundScheduleMessage(string filename)
         {
+            Filename = filename;
             Directed = true;
         }
     }

@@ -11,6 +11,7 @@ namespace Content.Shared.Research
     [NetSerializable, Serializable, Prototype("technology")]
     public class TechnologyPrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
         private string _name;
         private string _id;
         private SpriteSpecifier _icon;
@@ -18,7 +19,7 @@ namespace Content.Shared.Research
         private int _requiredPoints;
         private List<string> _requiredTechnologies;
         private List<string> _unlockedRecipes;
-
+#nullable restore
         /// <summary>
         ///     The ID of this technology prototype.
         /// </summary>

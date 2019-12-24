@@ -10,12 +10,13 @@ namespace Content.Shared.Jobs
     [Prototype("job")]
     public class JobPrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
         public string ID { get; private set; }
         public string Name { get; private set; }
 
         public string StartingGear { get; private set; }
         public IEnumerable<string> Department { get; private set; }
-
+#nullable restore
         public void LoadFrom(YamlMappingNode mapping)
         {
             ID = mapping.GetNode("id").AsString();

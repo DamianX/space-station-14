@@ -8,11 +8,12 @@ namespace Content.Shared.GameObjects.Components.Mobs
 {
     public abstract class SharedHairComponent : Component
     {
+#nullable disable
         private string _facialHairStyleName;
         private string _hairStyleName;
         private Color _hairColor;
         private Color _facialHairColor;
-
+#nullable restore
         public sealed override string Name => "Hair";
         public sealed override uint? NetID => ContentNetIDs.HAIR;
         public sealed override Type StateType => typeof(HairComponentState);

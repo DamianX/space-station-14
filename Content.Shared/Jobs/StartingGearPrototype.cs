@@ -10,9 +10,10 @@ namespace Content.Shared.Jobs
     [Prototype("startingGear")]
     public class StartingGearPrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
         private string _id;
         private Dictionary<string, string> _equipment;
-
+#nullable restore
         [ViewVariables]
         public string ID => _id;
 

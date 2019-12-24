@@ -8,10 +8,10 @@ using Robust.Shared.ViewVariables;
 
 namespace Content.Shared.GameObjects.Components.Research
 {
-    public class SharedMaterialStorageComponent : Component, IEnumerable<KeyValuePair<string, int>>
+    public abstract class SharedMaterialStorageComponent : Component, IEnumerable<KeyValuePair<string, int>>
     {
         [ViewVariables]
-        protected virtual Dictionary<string, int> Storage { get; set; }
+        protected virtual Dictionary<string, int> Storage { get; set; } = new Dictionary<string, int>();
         public override string Name => "MaterialStorage";
         public sealed override uint? NetID => ContentNetIDs.MATERIAL_STORAGE;
         public sealed override Type StateType => typeof(MaterialStorageState);

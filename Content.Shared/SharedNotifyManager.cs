@@ -27,10 +27,10 @@ namespace Content.Shared
             public MsgDoNotify(INetChannel channel) : base(NAME, GROUP) { }
 
             #endregion
-
+#nullable disable
             public string Message { get; set; }
             public GridCoordinates Coordinates;
-
+#nullable restore
             public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
                 Message = buffer.ReadString();

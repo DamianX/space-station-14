@@ -12,18 +12,19 @@ namespace Content.Shared.GameObjects
 {
     public abstract class SharedInventoryComponent : Component
     {
+#nullable disable
         // ReSharper disable UnassignedReadonlyField
         [Dependency] protected readonly IReflectionManager ReflectionManager;
         [Dependency] protected readonly IDynamicTypeFactory DynamicTypeFactory;
         // ReSharper restore UnassignedReadonlyField
-
+#nullable restore
         public sealed override string Name => "Inventory";
         public sealed override uint? NetID => ContentNetIDs.STORAGE;
         public sealed override Type StateType => typeof(InventoryComponentState);
-
+#nullable disable
         [ViewVariables]
         protected Inventory InventoryInstance { get; private set; }
-
+#nullable restore
         [ViewVariables]
         private string _templateName = "HumanInventory"; //stored for serialization purposes
 

@@ -24,10 +24,10 @@ namespace Content.Shared.Preferences
                 SelectedCharacterIndex = 0
             };
         }
-
+#nullable disable
         private List<ICharacterProfile> _characters;
         private int _selectedCharacterIndex;
-
+#nullable restore
         /// <summary>
         /// All player characters.
         /// </summary>

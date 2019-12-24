@@ -9,20 +9,20 @@ namespace Content.Shared.VendingMachines
     [Serializable, NetSerializable, Prototype("vendingMachineInventory")]
     public class VendingMachineInventoryPrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
         private string _id;
         private string _name;
         private string _description;
         private double _animationDuration;
         private string _spriteName;
         private Dictionary<string, uint> _startingInventory;
-
+#nullable restore
         public string ID => _id;
         public string Name => _name;
         public string Description => _description;
         public double AnimationDuration => _animationDuration;
         public string SpriteName => _spriteName;
         public Dictionary<string, uint> StartingInventory => _startingInventory;
-
         public void LoadFrom(YamlMappingNode mapping)
         {
             var serializer = YamlObjectSerializer.NewReader(mapping);

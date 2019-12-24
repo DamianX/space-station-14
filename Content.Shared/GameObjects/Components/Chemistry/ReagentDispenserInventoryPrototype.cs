@@ -15,9 +15,10 @@ namespace Content.Shared.GameObjects.Components.Chemistry
     [Serializable, NetSerializable, Prototype("reagentDispenserInventory")]
     public class ReagentDispenserInventoryPrototype : IPrototype, IIndexedPrototype
     {
+#nullable disable
         private string _id;
         private List<string> _inventory;
-
+#nullable restore
         public string ID => _id;
         public List<string> Inventory => _inventory;
 

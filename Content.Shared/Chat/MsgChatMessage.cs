@@ -17,7 +17,7 @@ namespace Content.Shared.Chat
         public MsgChatMessage(INetChannel channel) : base(NAME, GROUP) { }
 
         #endregion
-
+#nullable disable
         /// <summary>
         ///     The channel the message is on. This can also change whether certain params are used.
         /// </summary>
@@ -38,7 +38,7 @@ namespace Content.Shared.Chat
         ///     Only applies to <see cref="ChatChannel.Local"/> and <see cref="ChatChannel.Emotes"/>.
         /// </summary>
         public EntityUid SenderEntity { get; set; }
-
+#nullable restore
         public override void ReadFromBuffer(NetIncomingMessage buffer)
         {
             Channel = (ChatChannel) buffer.ReadByte();

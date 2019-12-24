@@ -21,8 +21,9 @@ namespace Content.Shared.GameObjects.Components.Materials
         public override string Name => "Material";
 
         public Dictionary<object, Material> MaterialTypes => _materialTypes;
+#nullable disable
         private Dictionary<object, Material> _materialTypes;
-
+#nullable restore
         public override void ExposeData(ObjectSerializer serializer)
         {
             base.ExposeData(serializer);
@@ -56,9 +57,10 @@ namespace Content.Shared.GameObjects.Components.Materials
 
         class MaterialDataEntry : IExposeData
         {
+#nullable disable
             public object Key;
             public string Value;
-
+#nullable restore
             public void ExposeData(ObjectSerializer serializer)
             {
                 if (!serializer.Reading)

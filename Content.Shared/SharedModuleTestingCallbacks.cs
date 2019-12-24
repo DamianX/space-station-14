@@ -5,6 +5,6 @@ namespace Content.Shared
 {
     public abstract class SharedModuleTestingCallbacks : ModuleTestingCallbacks
     {
-        public Action SharedBeforeIoC { get; set; }
+        public Action? SharedBeforeIoC { get; set; }
     }
 }

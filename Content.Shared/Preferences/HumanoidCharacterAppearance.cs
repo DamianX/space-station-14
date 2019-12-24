@@ -7,13 +7,14 @@ namespace Content.Shared.Preferences
     [Serializable, NetSerializable]
     public class HumanoidCharacterAppearance : ICharacterAppearance
     {
+#nullable disable
         public string HairStyleName { get; set; }
         public Color HairColor { get; set; }
         public string FacialHairStyleName { get; set; }
         public Color FacialHairColor { get; set; }
         public Color EyeColor { get; set; }
         public Color SkinColor { get; set; }
-
+#nullable restore
         public static HumanoidCharacterAppearance Default()
         {
             return new HumanoidCharacterAppearance

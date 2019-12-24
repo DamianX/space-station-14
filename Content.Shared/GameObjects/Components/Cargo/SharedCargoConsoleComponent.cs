@@ -14,15 +14,15 @@ namespace Content.Shared.GameObjects.Components.Cargo
 {
     public class SharedCargoConsoleComponent : Component
     {
+#nullable disable
 #pragma warning disable CS0649
-        [Dependency]
-        protected IPrototypeManager _prototypeManager;
+        [Dependency] protected IPrototypeManager _prototypeManager;
 #pragma warning restore
-
+#nullable restore
         public sealed override string Name => "CargoConsole";
 
         /// <summary>
-        ///    Sends away or requests shuttle 
+        ///    Sends away or requests shuttle
         /// </summary>
         [Serializable, NetSerializable]
         public class CargoConsoleShuttleMessage : BoundUserInterfaceMessage

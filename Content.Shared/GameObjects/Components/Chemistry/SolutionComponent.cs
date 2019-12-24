@@ -12,10 +12,11 @@ namespace Content.Shared.GameObjects.Components.Chemistry
 {
     public class SolutionComponent : Component
     {
+#nullable disable
 #pragma warning disable 649
         [Dependency] private readonly IPrototypeManager _prototypeManager;
 #pragma warning restore 649
-
+#nullable restore
         [ViewVariables]
         protected Solution _containedSolution = new Solution();
         protected int _maxVolume;
@@ -24,7 +25,7 @@ namespace Content.Shared.GameObjects.Components.Chemistry
         /// <summary>
         /// Triggered when the solution contents change.
         /// </summary>
-        public event Action SolutionChanged;
+        public event Action? SolutionChanged;
 
         /// <summary>
         ///     The maximum volume of the container.
@@ -177,7 +178,7 @@ namespace Content.Shared.GameObjects.Components.Chemistry
 
             //TODO: Make me work!
         }
-        
+
         [Serializable, NetSerializable]
         public class SolutionComponentState : ComponentState
         {
