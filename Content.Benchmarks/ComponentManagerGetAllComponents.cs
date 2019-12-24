@@ -12,7 +12,9 @@ namespace Content.Benchmarks
     {
         private readonly List<IEntity> _entities = new List<IEntity>();
 
+#nullable disable
         private IComponentManager _componentManager;
+#nullable restore
 
         [Params(500, 1000, 5000)] public int N { get; set; }
 

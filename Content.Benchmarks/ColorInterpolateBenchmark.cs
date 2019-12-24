@@ -20,9 +20,10 @@ namespace Content.Benchmarks
         private const MethodImplOptions AggressiveOpt = default;
 #endif
 
+#nullable disable
         private (Color, Color)[] _colors;
         private Color[] _output;
-
+#nullable restore
         [Params(100)] public int N { get; set; }
 
         [GlobalSetup]
