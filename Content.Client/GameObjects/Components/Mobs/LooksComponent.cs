@@ -1,17 +1,17 @@
 using Content.Shared.GameObjects.Components.Mobs;
+using Content.Shared.Preferences;
 using Content.Shared.Preferences.Appearance;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics.Shaders;
 using Robust.Client.Interfaces.GameObjects.Components;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
-using Robust.Shared.Maths;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client.GameObjects.Components.Mobs
 {
     [RegisterComponent]
-    public sealed class HairComponent : SharedHairComponent
+    public sealed class LooksComponent : SharedLooksComponent
     {
         private const string HairShaderName = "hair";
         private const string HairColorParameter = "hairColor";
@@ -22,6 +22,26 @@ namespace Content.Client.GameObjects.Components.Mobs
 
         private ShaderInstance _facialHairShader;
         private ShaderInstance _hairShader;
+
+        public override HumanoidCharacterAppearance Appearance
+        {
+            get => base.Appearance;
+            set
+            {
+                base.Appearance = value;
+                UpdateLooks();
+            }
+        }
+
+        public override Sex Sex
+        {
+            get => base.Sex;
+            set
+            {
+                base.Sex = value;
+                UpdateLooks();
+            }
+        }
 
         public override void Initialize()
         {
@@ -44,57 +64,18 @@ namespace Content.Client.GameObjects.Components.Mobs
             }
         }
 
-        public override string FacialHairStyleName
-        {
-            get => base.FacialHairStyleName;
-            set
-            {
-                base.FacialHairStyleName = value;
-                UpdateHairStyle();
-            }
-        }
-
-        public override string HairStyleName
-        {
-            get => base.HairStyleName;
-            set
-            {
-                base.HairStyleName = value;
-                UpdateHairStyle();
-            }
-        }
-
-        public override Color HairColor
-        {
-            get => base.HairColor;
-            set
-            {
-                base.HairColor = value;
-                UpdateHairStyle();
-            }
-        }
-
-        public override Color FacialHairColor
-        {
-            get => base.FacialHairColor;
-            set
-            {
-                base.FacialHairColor = value;
-                UpdateHairStyle();
-            }
-        }
-
-        private void UpdateHairStyle()
+        private void UpdateLooks()
         {
             var sprite = Owner.GetComponent<SpriteComponent>();
 
-            _hairShader?.SetParameter(HairColorParameter, HairColor);
-            _facialHairShader?.SetParameter(HairColorParameter, FacialHairColor);
+            _hairShader?.SetParameter(HairColorParameter, Appearance.HairColor);
+            _facialHairShader?.SetParameter(HairColorParameter, Appearance.FacialHairColor);
 
+            sprite.LayerSetState(HumanoidVisualLayers.Body, Sex == Sex.Male ? "male" : "female");
             sprite.LayerSetState(HumanoidVisualLayers.Hair,
-                HairStyles.HairStylesMap[HairStyleName ?? HairStyles.DefaultHairStyle]);
+                HairStyles.HairStylesMap[Appearance.HairStyleName ?? HairStyles.DefaultHairStyle]);
             sprite.LayerSetState(HumanoidVisualLayers.FacialHair,
-                HairStyles.FacialHairStylesMap[FacialHairStyleName ?? HairStyles.DefaultFacialHairStyle]);
+                HairStyles.FacialHairStylesMap[Appearance.FacialHairStyleName ?? HairStyles.DefaultFacialHairStyle]);
         }
     }
 }
