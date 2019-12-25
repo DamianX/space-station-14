@@ -16,6 +16,7 @@ using Robust.Client.Player;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Input;
+using Robust.Shared.Interfaces.GameObjects;
 using Robust.Shared.Interfaces.Network;
 using Robust.Shared.IoC;
 using Robust.Shared.Localization;
@@ -38,6 +39,8 @@ namespace Content.Client.GameTicking
         [Dependency] private IResourceCache _resourceCache;
         [Dependency] private IPlayerManager _playerManager;
         [Dependency] private IGameHud _gameHud;
+        [Dependency] private IEntityManager _entityManager;
+        [Dependency] private IClientPreferencesManager _preferencesManager;
 #pragma warning restore 649
 
         [ViewVariables] private bool _areWeReady;
@@ -189,7 +192,7 @@ namespace Content.Client.GameTicking
 
             _tickerState = TickerState.InLobby;
 
-            _lobby = new LobbyGui(_localization, _resourceCache);
+            _lobby = new LobbyGui(_entityManager, _localization, _resourceCache, _preferencesManager);
             _userInterfaceManager.StateRoot.AddChild(_lobby);
 
             LayoutContainer.SetAnchorPreset(_lobby, LayoutContainer.LayoutPreset.Wide);
