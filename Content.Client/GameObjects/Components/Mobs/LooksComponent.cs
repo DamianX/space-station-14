@@ -1,4 +1,5 @@
 using Content.Shared.GameObjects.Components.Mobs;
+using Content.Shared.Preferences;
 using Content.Shared.Preferences.Appearance;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics.Shaders;
@@ -11,7 +12,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Client.GameObjects.Components.Mobs
 {
     [RegisterComponent]
-    public sealed class HairComponent : SharedHairComponent
+    public sealed class LooksComponent : SharedLooksComponent
     {
         private const string HairShaderName = "hair";
         private const string HairColorParameter = "hairColor";
@@ -44,57 +45,27 @@ namespace Content.Client.GameObjects.Components.Mobs
             }
         }
 
-        public override string FacialHairStyleName
+        public override HumanoidCharacterAppearance Appearance
         {
-            get => base.FacialHairStyleName;
+            get => base.Appearance;
             set
             {
-                base.FacialHairStyleName = value;
-                UpdateHairStyle();
+                base.Appearance = value;
+                UpdateLooks();
             }
         }
 
-        public override string HairStyleName
-        {
-            get => base.HairStyleName;
-            set
-            {
-                base.HairStyleName = value;
-                UpdateHairStyle();
-            }
-        }
-
-        public override Color HairColor
-        {
-            get => base.HairColor;
-            set
-            {
-                base.HairColor = value;
-                UpdateHairStyle();
-            }
-        }
-
-        public override Color FacialHairColor
-        {
-            get => base.FacialHairColor;
-            set
-            {
-                base.FacialHairColor = value;
-                UpdateHairStyle();
-            }
-        }
-
-        private void UpdateHairStyle()
+        private void UpdateLooks()
         {
             var sprite = Owner.GetComponent<SpriteComponent>();
 
-            _hairShader?.SetParameter(HairColorParameter, HairColor);
-            _facialHairShader?.SetParameter(HairColorParameter, FacialHairColor);
+            _hairShader?.SetParameter(HairColorParameter, Appearance.HairColor);
+            _facialHairShader?.SetParameter(HairColorParameter, Appearance.FacialHairColor);
 
             sprite.LayerSetState(HumanoidVisualLayers.Hair,
-                HairStyles.HairStylesMap[HairStyleName ?? HairStyles.DefaultHairStyle]);
+                HairStyles.HairStylesMap[Appearance.HairStyleName ?? HairStyles.DefaultHairStyle]);
             sprite.LayerSetState(HumanoidVisualLayers.FacialHair,
-                HairStyles.FacialHairStylesMap[FacialHairStyleName ?? HairStyles.DefaultFacialHairStyle]);
+                HairStyles.FacialHairStylesMap[Appearance.FacialHairStyleName ?? HairStyles.DefaultFacialHairStyle]);
         }
     }
 }

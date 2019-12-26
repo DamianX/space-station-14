@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Robust.Shared.Interfaces.Serialization;
 using Robust.Shared.Serialization;
@@ -11,40 +12,34 @@ namespace Content.Shared.Preferences
     /// Serialized both over the network and to disk.
     /// </summary>
     [Serializable, NetSerializable]
-    public class PlayerPreferences
+    public sealed class PlayerPreferences
     {
         public static PlayerPreferences Default()
         {
-            return new PlayerPreferences
-            {
-                Characters = new List<ICharacterProfile>
+            return new PlayerPreferences(new List<ICharacterProfile>
                 {
                     HumanoidCharacterProfile.Default()
                 },
-                SelectedCharacterIndex = 0
-            };
+                0);
+        }
+
+        public PlayerPreferences(IEnumerable<ICharacterProfile> characters, int selectedCharacterIndex)
+        {
+            _characters = characters.ToList();
+            SelectedCharacterIndex = selectedCharacterIndex;
         }
 
         private List<ICharacterProfile> _characters;
-        private int _selectedCharacterIndex;
 
         /// <summary>
         /// All player characters.
         /// </summary>
-        public List<ICharacterProfile> Characters
-        {
-            get => _characters;
-            set => _characters = value;
-        }
+        public IEnumerable<ICharacterProfile> Characters => _characters.AsEnumerable();
 
         /// <summary>
         /// Index of the currently selected character.
         /// </summary>
-        public int SelectedCharacterIndex
-        {
-            get => _selectedCharacterIndex;
-            set => _selectedCharacterIndex = value;
-        }
+        public int SelectedCharacterIndex { get; }
 
         /// <summary>
         /// Retrieves the currently selected character.

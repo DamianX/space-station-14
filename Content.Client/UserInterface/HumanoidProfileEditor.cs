@@ -1,4 +1,5 @@
-﻿using Content.Client.GameObjects.Components;
+﻿using System;
+using Content.Client.GameObjects.Components;
 using Content.Client.Interfaces;
 using Content.Shared.Preferences;
 using Robust.Client.Interfaces.ResourceManagement;
@@ -11,7 +12,7 @@ namespace Content.Client.UserInterface
     public class HumanoidProfileEditor : SS14Window
     {
         private readonly IClientPreferencesManager _preferencesManager;
-        private readonly HumanoidCharacterProfile _profile;
+        private HumanoidCharacterProfile _profile;
         private readonly int _characterSlot;
 
         private readonly HairPickerWindow _hairPickerWindow;
@@ -47,24 +48,28 @@ namespace Content.Client.UserInterface
             _hairPickerWindow.Populate();
             _hairPickerWindow.OnHairStylePicked += newStyle =>
             {
-                _profile.CharacterAppearance.HairStyleName = newStyle;
+                _profile = _profile.WithCharacterAppearance(
+                    _profile.CharacterAppearance.WithHairStyleName(newStyle));
                 IsDirty = true;
             };
             _hairPickerWindow.OnHairColorPicked += newColor =>
             {
-                _profile.CharacterAppearance.HairColor = newColor;
+                _profile = _profile.WithCharacterAppearance(
+                    _profile.CharacterAppearance.WithHairColor(newColor));
                 IsDirty = true;
             };
             _facialHairPickerWindow = new FacialHairPickerWindow(resourceCache, localization);
             _facialHairPickerWindow.Populate();
             _facialHairPickerWindow.OnHairStylePicked += newStyle =>
             {
-                _profile.CharacterAppearance.FacialHairStyleName = newStyle;
+                _profile = _profile.WithCharacterAppearance(
+                    _profile.CharacterAppearance.WithFacialHairStyleName(newStyle));
                 IsDirty = true;
             };
             _facialHairPickerWindow.OnHairColorPicked += newColor =>
             {
-                _profile.CharacterAppearance.FacialHairColor = newColor;
+                _profile = _profile.WithCharacterAppearance(
+                    _profile.CharacterAppearance.WithFacialHairColor(newColor));
                 IsDirty = true;
             };
 
@@ -79,7 +84,7 @@ namespace Content.Client.UserInterface
                 _nameEdit = new LineEdit {SizeFlagsHorizontal = SizeFlags.FillExpand};
                 _nameEdit.OnTextChanged += args =>
                 {
-                    _profile.Name = args.Text;
+                    _profile = _profile.WithName(args.Text);
                     IsDirty = true;
                 };
                 hBox.AddChild(nameLabel);
@@ -97,14 +102,14 @@ namespace Content.Client.UserInterface
                 _sexMaleButton = new Button {Text = localization.GetString("Male")};
                 _sexMaleButton.OnPressed += args =>
                 {
-                    _profile.Sex = Sex.Male;
+                    _profile = _profile.WithSex(Sex.Male);
                     IsDirty = true;
                     UpdateSexControls();
                 };
                 _sexFemaleButton = new Button {Text = localization.GetString("Female")};
                 _sexFemaleButton.OnPressed += args =>
                 {
-                    _profile.Sex = Sex.Female;
+                    _profile = _profile.WithSex(Sex.Female);
                     IsDirty = true;
                     UpdateSexControls();
                 };
@@ -126,7 +131,7 @@ namespace Content.Client.UserInterface
                 {
                     if (!int.TryParse(args.Text, out var newAge))
                         return;
-                    _profile.Age = newAge;
+                    _profile = _profile.WithAge(newAge);
                     IsDirty = true;
                 };
                 hBox.AddChild(ageLabel);
@@ -157,6 +162,7 @@ namespace Content.Client.UserInterface
                 {
                     IsDirty = false;
                     _preferencesManager.UpdateCharacter(_profile, _characterSlot);
+                    OnProfileChanged?.Invoke(_profile);
                 };
                 vBox.AddChild(_saveButton);
             }
@@ -192,5 +198,7 @@ namespace Content.Client.UserInterface
             _hairPickerWindow.Dispose();
             _facialHairPickerWindow.Dispose();
         }
+
+        public event Action<HumanoidCharacterProfile> OnProfileChanged;
     }
 }
