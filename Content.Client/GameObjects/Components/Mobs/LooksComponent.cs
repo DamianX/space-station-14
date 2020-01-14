@@ -6,7 +6,6 @@ using Robust.Client.Graphics.Shaders;
 using Robust.Client.Interfaces.GameObjects.Components;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
-using Robust.Shared.Maths;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client.GameObjects.Components.Mobs
@@ -23,6 +22,26 @@ namespace Content.Client.GameObjects.Components.Mobs
 
         private ShaderInstance _facialHairShader;
         private ShaderInstance _hairShader;
+
+        public override HumanoidCharacterAppearance Appearance
+        {
+            get => base.Appearance;
+            set
+            {
+                base.Appearance = value;
+                UpdateLooks();
+            }
+        }
+
+        public override Sex Sex
+        {
+            get => base.Sex;
+            set
+            {
+                base.Sex = value;
+                UpdateLooks();
+            }
+        }
 
         public override void Initialize()
         {
@@ -45,16 +64,6 @@ namespace Content.Client.GameObjects.Components.Mobs
             }
         }
 
-        public override HumanoidCharacterAppearance Appearance
-        {
-            get => base.Appearance;
-            set
-            {
-                base.Appearance = value;
-                UpdateLooks();
-            }
-        }
-
         private void UpdateLooks()
         {
             var sprite = Owner.GetComponent<SpriteComponent>();
@@ -62,6 +71,7 @@ namespace Content.Client.GameObjects.Components.Mobs
             _hairShader?.SetParameter(HairColorParameter, Appearance.HairColor);
             _facialHairShader?.SetParameter(HairColorParameter, Appearance.FacialHairColor);
 
+            sprite.LayerSetState(HumanoidVisualLayers.Body, Sex == Sex.Male ? "male" : "female");
             sprite.LayerSetState(HumanoidVisualLayers.Hair,
                 HairStyles.HairStylesMap[Appearance.HairStyleName ?? HairStyles.DefaultHairStyle]);
             sprite.LayerSetState(HumanoidVisualLayers.FacialHair,

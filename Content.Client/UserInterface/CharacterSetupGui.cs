@@ -1,19 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using Content.Client.GameObjects.Components.Mobs;
+﻿using Content.Client.GameObjects.Components.Mobs;
 using Content.Client.Interfaces;
 using Content.Client.Utility;
 using Content.Shared.Preferences;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics.Drawing;
-using Robust.Client.Interfaces.GameObjects.Components;
 using Robust.Client.Interfaces.ResourceManagement;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
-using Robust.Shared.Configuration;
 using Robust.Shared.Interfaces.GameObjects;
-using Robust.Shared.IoC;
 using Robust.Shared.Localization;
 using Robust.Shared.Map;
 using Robust.Shared.Maths;
@@ -22,6 +16,11 @@ namespace Content.Client.UserInterface
 {
     public class CharacterSetupGui : Control
     {
+        private readonly VBoxContainer _charactersVBox;
+        private readonly Button _createNewCharacterButton;
+        private readonly IEntityManager _entityManager;
+        private readonly HumanoidProfileEditorPanel _humanoidProfileEditorPanel;
+        private readonly IClientPreferencesManager _preferencesManager;
         public readonly Button CloseButton;
 
         public CharacterSetupGui(IEntityManager entityManager,
@@ -29,12 +28,14 @@ namespace Content.Client.UserInterface
             IResourceCache resourceCache,
             IClientPreferencesManager preferencesManager)
         {
+            _entityManager = entityManager;
+            _preferencesManager = preferencesManager;
             var margin = new MarginContainer
             {
                 MarginBottomOverride = 20,
                 MarginLeftOverride = 20,
                 MarginRightOverride = 20,
-                MarginTopOverride = 20,
+                MarginTopOverride = 20
             };
 
             AddChild(margin);
@@ -43,7 +44,7 @@ namespace Content.Client.UserInterface
             var back = new StyleBoxTexture
             {
                 Texture = panelTex,
-                Modulate = new Color(37, 37, 42),
+                Modulate = new Color(37, 37, 42)
             };
             back.SetPatchMargin(StyleBox.Margin.All, 10);
 
@@ -62,7 +63,7 @@ namespace Content.Client.UserInterface
             {
                 SizeFlagsHorizontal = SizeFlags.Expand | SizeFlags.ShrinkEnd,
                 Text = localization.GetString("Save and close"),
-                StyleClasses = {NanoStyle.StyleClassButtonBig},
+                StyleClasses = {NanoStyle.StyleClassButtonBig}
             };
 
             var topHBox = new HBoxContainer
@@ -96,7 +97,7 @@ namespace Content.Client.UserInterface
                 {
                     BackgroundColor = NanoStyle.NanoGold,
                     ContentMarginTopOverride = 2
-                },
+                }
             });
 
             var hBox = new HBoxContainer
@@ -106,11 +107,11 @@ namespace Content.Client.UserInterface
             };
             vBox.AddChild(hBox);
 
-            var charactersVBox = new VBoxContainer();
+            _charactersVBox = new VBoxContainer();
 
             hBox.AddChild(new MarginContainer
             {
-                CustomMinimumSize = (350, 0),
+                CustomMinimumSize = (420, 0),
                 SizeFlagsHorizontal = SizeFlags.Fill,
                 MarginTopOverride = 5,
                 MarginLeftOverride = 5,
@@ -121,79 +122,144 @@ namespace Content.Client.UserInterface
                         SizeFlagsVertical = SizeFlags.FillExpand,
                         Children =
                         {
-                            charactersVBox
+                            _charactersVBox
                         }
                     }
                 }
             });
 
+            _createNewCharacterButton = new Button
+            {
+                Text = "Create new slot...",
+                ToolTip = $"A maximum of {preferencesManager.Settings.MaxCharacterSlots} characters are allowed."
+            };
+            _createNewCharacterButton.OnPressed += args =>
+            {
+                preferencesManager.CreateCharacter(HumanoidCharacterProfile.Default());
+                UpdateUI();
+            };
+
+            hBox.AddChild(new PanelContainer
+            {
+                PanelOverride = new StyleBoxFlat {BackgroundColor = NanoStyle.NanoGold},
+                CustomMinimumSize = (2, 0)
+            });
+            _humanoidProfileEditorPanel = new HumanoidProfileEditorPanel(localization,
+                resourceCache,
+                preferencesManager
+            );
+            _humanoidProfileEditorPanel.OnProfileChanged += newProfile => { UpdateUI(); };
+            hBox.AddChild(_humanoidProfileEditorPanel);
+
+            UpdateUI();
+        }
+
+        private void UpdateUI()
+        {
             var numberOfFullSlots = 0;
-            foreach (var character in preferencesManager.Preferences.Characters)
+            var characterButtonsGroup = new ButtonGroup();
+            _charactersVBox.RemoveAllChildren();
+            var characterIndex = 0;
+            foreach (var character in _preferencesManager.Preferences.Characters)
             {
                 if (character is null)
                 {
+                    characterIndex++;
                     continue;
                 }
 
                 numberOfFullSlots++;
-                var previewDummy = entityManager.SpawnEntity("HumanMob_Content", GridCoordinates.Nullspace);
-                previewDummy.GetComponent<LooksComponent>().Appearance =
-                    (HumanoidCharacterAppearance) character.CharacterAppearance;
-                charactersVBox.AddChild(new CharacterPickerButton(previewDummy.GetComponent<SpriteComponent>(),
+                var characterPickerButton = new CharacterPickerButton(_entityManager,
+                    _preferencesManager,
+                    characterButtonsGroup,
+                    character,
                     character.Name,
                     character.Name,
-                    "Assistant"));
+                    "Assistant");
+                _charactersVBox.AddChild(characterPickerButton);
+
+                var characterIndexCopy = characterIndex;
+                characterPickerButton.ActualButton.OnPressed += args =>
+                {
+                    _humanoidProfileEditorPanel.Profile = (HumanoidCharacterProfile) character;
+                    _humanoidProfileEditorPanel.CharacterSlot = characterIndexCopy;
+                    _humanoidProfileEditorPanel.UpdateControls();
+                    _preferencesManager.SelectCharacter(character);
+                };
+                characterIndex++;
             }
 
-            if (numberOfFullSlots < preferencesManager.Settings.MaxCharacterSlots)
-            {
-                charactersVBox.AddChild(new Button{Text = "Create new slot..."});
-            }
-
-            hBox.AddChild(new PanelContainer
-            {
-                PanelOverride = new StyleBoxFlat {BackgroundColor = NanoStyle.NanoGold}, CustomMinimumSize = (2, 0)
-            });
-            hBox.AddChild(new HumanoidProfileEditorPanel(localization, resourceCache, preferencesManager));
+            _createNewCharacterButton.Disabled =
+                numberOfFullSlots >= _preferencesManager.Settings.MaxCharacterSlots;
+            _charactersVBox.AddChild(_createNewCharacterButton);
         }
 
         private class CharacterPickerButton : Control
         {
-            public CharacterPickerButton(ISpriteComponent spriteComponent,
+            public readonly Button ActualButton;
+
+            public CharacterPickerButton(
+                IEntityManager entityManager,
+                IClientPreferencesManager preferencesManager,
+                ButtonGroup group,
+                ICharacterProfile profile,
                 string slotName,
                 string characterName,
                 string jobTitle)
             {
-                if (slotName != characterName)
-                {
-                    slotName = $"({slotName}) {characterName}";
-                }
+                var previewDummy = entityManager.SpawnEntity("HumanMob_Content", GridCoordinates.Nullspace);
+                previewDummy.GetComponent<LooksComponent>().UpdateFromProfile(profile);
 
-                AddChild(new Button
+                var spriteComponent = previewDummy.GetComponent<SpriteComponent>();
+
+                ActualButton = new Button
                 {
                     SizeFlagsHorizontal = SizeFlags.FillExpand,
                     SizeFlagsVertical = SizeFlags.FillExpand,
-                    ToggleMode = true
-                });
+                    ToggleMode = true,
+                    Group = group
+                };
+                AddChild(ActualButton);
 
-                AddChild(new HBoxContainer
+                var view = new SpriteView
                 {
+                    Sprite = spriteComponent,
+                    Scale = (2, 2),
                     MouseFilter = MouseFilterMode.Ignore,
+                    OverrideDirection = Direction.South
+                };
+                if (slotName != characterName) slotName = $"({slotName}) {characterName}";
+
+                var descriptionLabel = new Label
+                {
+                    Text = $"{slotName}\n{jobTitle}"
+                };
+                var deleteButton = new Button
+                {
+                    Text = "Delete",
+                    Visible = profile != preferencesManager.Preferences.SelectedCharacter,
+                    SizeFlagsHorizontal = SizeFlags.ShrinkEnd
+                };
+                deleteButton.OnPressed += args =>
+                {
+                    Parent.RemoveChild(this);
+                    preferencesManager.DeleteCharacter(profile);
+                };
+
+                var internalHBox = new HBoxContainer
+                {
+                    SizeFlagsHorizontal = SizeFlags.FillExpand,
+                    MouseFilter = MouseFilterMode.Ignore,
+                    SeparationOverride = 0,
                     Children =
                     {
-                        new SpriteView
-                        {
-                            Sprite = spriteComponent,
-                            Scale = (2, 2),
-                            MouseFilter = MouseFilterMode.Ignore,
-                            OverrideDirection = Direction.South
-                        },
-                        new Label
-                        {
-                            Text = spriteComponent == null ? "empty" : $"{slotName}\n{jobTitle}"
-                        }
+                        view,
+                        descriptionLabel,
+                        deleteButton
                     }
-                });
+                };
+
+                AddChild(internalHBox);
             }
         }
     }

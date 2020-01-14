@@ -1,7 +1,6 @@
 using System;
 using Content.Shared.Preferences;
 using Robust.Shared.GameObjects;
-using Robust.Shared.Maths;
 using Robust.Shared.Serialization;
 using Robust.Shared.ViewVariables;
 
@@ -10,6 +9,7 @@ namespace Content.Shared.GameObjects.Components.Mobs
     public abstract class SharedLooksComponent : Component
     {
         private HumanoidCharacterAppearance _appearance;
+        private Sex _sex;
 
         public sealed override string Name => "Hair";
         public sealed override uint? NetID => ContentNetIDs.HAIR;
@@ -26,25 +26,48 @@ namespace Content.Shared.GameObjects.Components.Mobs
             }
         }
 
+        [ViewVariables(VVAccess.ReadWrite)]
+        public virtual Sex Sex
+        {
+            get => _sex;
+            set
+            {
+                _sex = value;
+                Dirty();
+            }
+        }
+
         public override ComponentState GetComponentState()
         {
-            return new LooksComponentState(Appearance);
+            return new LooksComponentState(Appearance, Sex);
         }
 
         public override void HandleComponentState(ComponentState curState, ComponentState nextState)
         {
             var cast = (LooksComponentState) curState;
             Appearance = cast.Appearance;
+            Sex = cast.Sex;
         }
 
-        [Serializable, NetSerializable]
+        public void UpdateFromProfile(ICharacterProfile profile)
+        {
+            var humanoid = (HumanoidCharacterProfile) profile;
+            Appearance = (HumanoidCharacterAppearance) humanoid.CharacterAppearance;
+            Sex = humanoid.Sex;
+        }
+
+        [Serializable]
+        [NetSerializable]
         private sealed class LooksComponentState : ComponentState
         {
-            public HumanoidCharacterAppearance Appearance { get; }
-            public LooksComponentState(HumanoidCharacterAppearance appearance) : base(ContentNetIDs.HAIR)
+            public LooksComponentState(HumanoidCharacterAppearance appearance, Sex sex) : base(ContentNetIDs.HAIR)
             {
                 Appearance = appearance;
+                Sex = sex;
             }
+
+            public HumanoidCharacterAppearance Appearance { get; }
+            public Sex Sex { get; }
         }
     }
 }

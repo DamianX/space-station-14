@@ -13,31 +13,6 @@ namespace Content.Client.UserInterface
 {
     public class HumanoidProfileEditorPanel : Control
     {
-        private readonly IClientPreferencesManager _preferencesManager;
-        private HumanoidCharacterProfile _profile;
-        private readonly int _characterSlot;
-
-        private readonly HairPickerWindow _hairPickerWindow;
-        private readonly FacialHairPickerWindow _facialHairPickerWindow;
-
-        private readonly LineEdit _nameEdit;
-        private readonly Button _sexMaleButton;
-        private readonly Button _sexFemaleButton;
-        private readonly LineEdit _ageEdit;
-        private readonly Button _saveButton;
-
-        private bool _isDirty;
-
-        private bool IsDirty
-        {
-            get => _isDirty;
-            set
-            {
-                _isDirty = value;
-                UpdateSaveButton();
-            }
-        }
-
         private static readonly StyleBoxFlat HighlightedStyle = new StyleBoxFlat
         {
             BackgroundColor = new Color(47, 47, 53),
@@ -47,47 +22,54 @@ namespace Content.Client.UserInterface
             ContentMarginRightOverride = 10
         };
 
-        private static Control HighlightedContainer()
-        {
-            return new PanelContainer
-            {
-                PanelOverride = HighlightedStyle
-            };
-        }
+        private readonly LineEdit _ageEdit;
+        private readonly FacialHairPickerWindow _facialHairPickerWindow;
+
+        private readonly HairPickerWindow _hairPickerWindow;
+
+        private readonly LineEdit _nameEdit;
+        private readonly IClientPreferencesManager _preferencesManager;
+        private readonly Button _saveButton;
+        private readonly Button _sexFemaleButton;
+        private readonly Button _sexMaleButton;
+
+        private bool _isDirty;
+        public int CharacterSlot;
+        public HumanoidCharacterProfile Profile;
 
         public HumanoidProfileEditorPanel(ILocalizationManager localization,
             IResourceCache resourceCache,
             IClientPreferencesManager preferencesManager)
         {
-            _profile = (HumanoidCharacterProfile) preferencesManager.Preferences.SelectedCharacter;
-            _characterSlot = preferencesManager.Preferences.SelectedCharacterIndex;
+            Profile = (HumanoidCharacterProfile) preferencesManager.Preferences.SelectedCharacter;
+            CharacterSlot = preferencesManager.Preferences.SelectedCharacterIndex;
             _preferencesManager = preferencesManager;
             _hairPickerWindow = new HairPickerWindow(resourceCache, localization);
             _hairPickerWindow.Populate();
             _hairPickerWindow.OnHairStylePicked += newStyle =>
             {
-                _profile = _profile.WithCharacterAppearance(
-                    _profile.Appearance.WithHairStyleName(newStyle));
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairStyleName(newStyle));
                 IsDirty = true;
             };
             _hairPickerWindow.OnHairColorPicked += newColor =>
             {
-                _profile = _profile.WithCharacterAppearance(
-                    _profile.Appearance.WithHairColor(newColor));
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairColor(newColor));
                 IsDirty = true;
             };
             _facialHairPickerWindow = new FacialHairPickerWindow(resourceCache, localization);
             _facialHairPickerWindow.Populate();
             _facialHairPickerWindow.OnHairStylePicked += newStyle =>
             {
-                _profile = _profile.WithCharacterAppearance(
-                    _profile.Appearance.WithFacialHairStyleName(newStyle));
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairStyleName(newStyle));
                 IsDirty = true;
             };
             _facialHairPickerWindow.OnHairColorPicked += newColor =>
             {
-                _profile = _profile.WithCharacterAppearance(
-                    _profile.Appearance.WithFacialHairColor(newColor));
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairColor(newColor));
                 IsDirty = true;
             };
 
@@ -129,7 +111,7 @@ namespace Content.Client.UserInterface
             #endregion Randomize
 
             var middleColumn = new VBoxContainer();
-            middleContainer.AddChild(middleColumn);
+            leftColumn.AddChild(middleColumn);
 
             #region Name
 
@@ -147,10 +129,15 @@ namespace Content.Client.UserInterface
                 };
                 _nameEdit.OnTextChanged += args =>
                 {
-                    _profile = _profile.WithName(args.Text);
+                    Profile = Profile.WithName(args.Text);
                     IsDirty = true;
                 };
-                var nameRandomButton = new Button {Text = localization.GetString("Randomize")};
+                var nameRandomButton = new Button
+                {
+                    Text = localization.GetString("Randomize"),
+                    Disabled = true,
+                    ToolTip = "Not implemented yet!"
+                };
                 hBox.AddChild(nameLabel);
                 hBox.AddChild(_nameEdit);
                 hBox.AddChild(nameRandomButton);
@@ -182,7 +169,7 @@ namespace Content.Client.UserInterface
                 };
                 _sexMaleButton.OnPressed += args =>
                 {
-                    _profile = _profile.WithSex(Sex.Male);
+                    Profile = Profile.WithSex(Sex.Male);
                     IsDirty = true;
                 };
                 _sexFemaleButton = new Button
@@ -192,7 +179,7 @@ namespace Content.Client.UserInterface
                 };
                 _sexFemaleButton.OnPressed += args =>
                 {
-                    _profile = _profile.WithSex(Sex.Female);
+                    Profile = Profile.WithSex(Sex.Female);
                     IsDirty = true;
                 };
                 hBox.AddChild(sexLabel);
@@ -201,6 +188,7 @@ namespace Content.Client.UserInterface
                 panel.AddChild(hBox);
                 sexAndAgeRow.AddChild(panel);
             }
+
             #endregion Sex
 
             #region Age
@@ -214,7 +202,7 @@ namespace Content.Client.UserInterface
                 {
                     if (!int.TryParse(args.Text, out var newAge))
                         return;
-                    _profile = _profile.WithAge(newAge);
+                    Profile = Profile.WithAge(newAge);
                     IsDirty = true;
                 };
                 hBox.AddChild(ageLabel);
@@ -250,21 +238,23 @@ namespace Content.Client.UserInterface
                 panelContainer.AddChild(hBox);
                 rightColumn.AddChild(panelContainer);
             }
+
             #endregion Import/Export
 
             #region Save
 
             {
                 var panel = HighlightedContainer();
-                _saveButton = new Button {
+                _saveButton = new Button
+                {
                     Text = localization.GetString("Save"),
                     SizeFlagsHorizontal = SizeFlags.ShrinkCenter
                 };
                 _saveButton.OnPressed += args =>
                 {
                     IsDirty = false;
-                    _preferencesManager.UpdateCharacter(_profile, _characterSlot);
-                    OnProfileChanged?.Invoke(_profile);
+                    _preferencesManager.UpdateCharacter(Profile, CharacterSlot);
+                    OnProfileChanged?.Invoke(Profile);
                 };
                 panel.AddChild(_saveButton);
                 rightColumn.AddChild(panel);
@@ -295,6 +285,24 @@ namespace Content.Client.UserInterface
                 var hairPanel = new HairPickerPanel(resourceCache, localization);
                 hairPanel.Populate(HairType.Hair);
 
+                hairPanel.OnHairStylePicked += newStyle =>
+                {
+                    Profile = Profile.WithCharacterAppearance(
+                        hairButton.Pressed
+                            ? Profile.Appearance.WithHairStyleName(newStyle)
+                            : Profile.Appearance.WithFacialHairStyleName(newStyle));
+                    IsDirty = true;
+                };
+
+                hairPanel.OnHairColorPicked += newColor =>
+                {
+                    Profile = Profile.WithCharacterAppearance(
+                        hairButton.Pressed
+                            ? Profile.Appearance.WithHairColor(newColor)
+                            : Profile.Appearance.WithFacialHairColor(newColor));
+                    IsDirty = true;
+                };
+
                 hairButton.OnPressed += args => { hairPanel.Populate(HairType.Hair); };
                 facialHairButton.OnPressed += args => { hairPanel.Populate(HairType.FacialHair); };
 
@@ -302,7 +310,6 @@ namespace Content.Client.UserInterface
                 hairButtonHBox.AddChild(facialHairButton);
 
                 hairVBox.AddChild(hairButtonHBox);
-
                 hairVBox.AddChild(hairPanel);
 
                 panel.AddChild(hairVBox);
@@ -314,10 +321,28 @@ namespace Content.Client.UserInterface
             UpdateControls();
         }
 
+        private bool IsDirty
+        {
+            get => _isDirty;
+            set
+            {
+                _isDirty = value;
+                UpdateSaveButton();
+            }
+        }
+
+        private static Control HighlightedContainer()
+        {
+            return new PanelContainer
+            {
+                PanelOverride = HighlightedStyle
+            };
+        }
+
         private void UpdateSexControls()
         {
-            _sexMaleButton.Pressed = _profile.Sex == Sex.Male;
-            _sexFemaleButton.Pressed = _profile.Sex == Sex.Female;
+            _sexMaleButton.Pressed = Profile.Sex == Sex.Male;
+            _sexFemaleButton.Pressed = Profile.Sex == Sex.Female;
         }
 
         private void UpdateSaveButton()
@@ -325,11 +350,11 @@ namespace Content.Client.UserInterface
             _saveButton.Disabled = !IsDirty;
         }
 
-        private void UpdateControls()
+        public void UpdateControls()
         {
-            _nameEdit.Text = _profile.Name;
+            _nameEdit.Text = Profile.Name;
             UpdateSexControls();
-            _ageEdit.Text = _profile.Age.ToString();
+            _ageEdit.Text = Profile.Age.ToString();
             UpdateSaveButton();
         }
 

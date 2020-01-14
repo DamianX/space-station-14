@@ -1,19 +1,43 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using Robust.Shared.Interfaces.Serialization;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared.Preferences
 {
     /// <summary>
-    /// Contains all player characters and the index of the currently selected character.
-    /// Serialized both over the network and to disk.
+    ///     Contains all player characters and the index of the currently selected character.
+    ///     Serialized both over the network and to disk.
     /// </summary>
-    [Serializable, NetSerializable]
+    [Serializable]
+    [NetSerializable]
     public sealed class PlayerPreferences
     {
+        private List<ICharacterProfile> _characters;
+
+        public PlayerPreferences(IEnumerable<ICharacterProfile> characters, int selectedCharacterIndex)
+        {
+            _characters = characters.ToList();
+            SelectedCharacterIndex = selectedCharacterIndex;
+        }
+
+        /// <summary>
+        ///     All player characters.
+        /// </summary>
+        public IEnumerable<ICharacterProfile> Characters => _characters.AsEnumerable();
+
+        /// <summary>
+        ///     Index of the currently selected character.
+        /// </summary>
+        public int SelectedCharacterIndex { get; }
+
+        /// <summary>
+        ///     The currently selected character.
+        /// </summary>
+        public ICharacterProfile SelectedCharacter => Characters.ElementAtOrDefault(SelectedCharacterIndex);
+
+        public int FirstEmptySlot => IndexOfCharacter(null);
+
         public static PlayerPreferences Default()
         {
             return new PlayerPreferences(new List<ICharacterProfile>
@@ -23,27 +47,9 @@ namespace Content.Shared.Preferences
                 0);
         }
 
-        public PlayerPreferences(IEnumerable<ICharacterProfile> characters, int selectedCharacterIndex)
+        public int IndexOfCharacter(ICharacterProfile profile)
         {
-            _characters = characters.ToList();
-            SelectedCharacterIndex = selectedCharacterIndex;
+            return _characters.FindIndex(x => x == profile);
         }
-
-        private List<ICharacterProfile> _characters;
-
-        /// <summary>
-        /// All player characters.
-        /// </summary>
-        public IEnumerable<ICharacterProfile> Characters => _characters.AsEnumerable();
-
-        /// <summary>
-        /// Index of the currently selected character.
-        /// </summary>
-        public int SelectedCharacterIndex { get; }
-
-        /// <summary>
-        /// Retrieves the currently selected character.
-        /// </summary>
-        public ICharacterProfile SelectedCharacter => Characters.ElementAtOrDefault(SelectedCharacterIndex);
     }
 }
