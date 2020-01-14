@@ -49,13 +49,13 @@ namespace Content.Client.UserInterface
             _hairPickerWindow.OnHairStylePicked += newStyle =>
             {
                 _profile = _profile.WithCharacterAppearance(
-                    _profile.CharacterAppearance.WithHairStyleName(newStyle));
+                    _profile.Appearance.WithHairStyleName(newStyle));
                 IsDirty = true;
             };
             _hairPickerWindow.OnHairColorPicked += newColor =>
             {
                 _profile = _profile.WithCharacterAppearance(
-                    _profile.CharacterAppearance.WithHairColor(newColor));
+                    _profile.Appearance.WithHairColor(newColor));
                 IsDirty = true;
             };
             _facialHairPickerWindow = new FacialHairPickerWindow(resourceCache, localization);
@@ -63,13 +63,13 @@ namespace Content.Client.UserInterface
             _facialHairPickerWindow.OnHairStylePicked += newStyle =>
             {
                 _profile = _profile.WithCharacterAppearance(
-                    _profile.CharacterAppearance.WithFacialHairStyleName(newStyle));
+                    _profile.Appearance.WithFacialHairStyleName(newStyle));
                 IsDirty = true;
             };
             _facialHairPickerWindow.OnHairColorPicked += newColor =>
             {
                 _profile = _profile.WithCharacterAppearance(
-                    _profile.CharacterAppearance.WithFacialHairColor(newColor));
+                    _profile.Appearance.WithFacialHairColor(newColor));
                 IsDirty = true;
             };
 

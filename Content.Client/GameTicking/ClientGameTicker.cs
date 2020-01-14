@@ -48,6 +48,7 @@ namespace Content.Client.GameTicking
         [ViewVariables] private TickerState _tickerState;
         [ViewVariables] private ChatBox _gameChat;
         [ViewVariables] private LobbyGui _lobby;
+        [ViewVariables] private CharacterSetupGui _characterSetup;
         [ViewVariables] private bool _gameStarted;
         [ViewVariables] private DateTime _startTime;
         [ViewVariables] private string _serverInfoBlob;
@@ -192,6 +193,13 @@ namespace Content.Client.GameTicking
 
             _tickerState = TickerState.InLobby;
 
+            _characterSetup = new CharacterSetupGui(_entityManager, _localization, _resourceCache, _preferencesManager);
+            LayoutContainer.SetAnchorPreset(_characterSetup, LayoutContainer.LayoutPreset.Wide);
+            _characterSetup.CloseButton.OnPressed += args =>
+            {
+                _userInterfaceManager.StateRoot.AddChild(_lobby);
+                _userInterfaceManager.StateRoot.RemoveChild(_characterSetup);
+            };
             _lobby = new LobbyGui(_entityManager, _localization, _resourceCache, _preferencesManager);
             _userInterfaceManager.StateRoot.AddChild(_lobby);
 
@@ -207,6 +215,11 @@ namespace Content.Client.GameTicking
 
             _updateLobbyUi();
 
+            _lobby.CharacterSetupButton.OnPressed += args =>
+            {
+                _userInterfaceManager.StateRoot.RemoveChild(_lobby);
+                _userInterfaceManager.StateRoot.AddChild(_characterSetup);
+            };
             _lobby.ObserveButton.OnPressed += args => _console.ProcessCommand("observe");
             _lobby.ReadyButton.OnPressed += args =>
             {

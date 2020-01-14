@@ -12,12 +12,12 @@ using Robust.Shared.Maths;
 
 namespace Content.Client.UserInterface
 {
-    public class CharacterSetupPanel : Control
+    public class LobbyCharacterPreviewPanel : Control
     {
         private readonly HumanoidProfileEditor _humanoidProfileEditor;
         private readonly IEntity _previewDummy;
 
-        public CharacterSetupPanel(IEntityManager entityManager,
+        public LobbyCharacterPreviewPanel(IEntityManager entityManager,
             ILocalizationManager localization,
             IResourceCache resourceCache,
             IClientPreferencesManager preferencesManager)
@@ -25,7 +25,7 @@ namespace Content.Client.UserInterface
             _humanoidProfileEditor = new HumanoidProfileEditor(localization, resourceCache, preferencesManager);
             _humanoidProfileEditor.OnProfileChanged += profile =>
             {
-                _previewDummy.GetComponent<LooksComponent>().Appearance = profile.CharacterAppearance;
+                _previewDummy.GetComponent<LooksComponent>().Appearance = profile.Appearance;
             };
 
             _previewDummy = entityManager.SpawnEntity("HumanMob_Content", GridCoordinates.Nullspace);
@@ -35,6 +35,7 @@ namespace Content.Client.UserInterface
             var characterEditButton = new Button {Text = localization.GetString("Edit"), SizeFlagsHorizontal = SizeFlags.None};
             characterEditButton.OnPressed += args => { _humanoidProfileEditor.Open(); };
             var characterLoadButton = new Button {Text = localization.GetString("Load"), SizeFlagsHorizontal = SizeFlags.None};
+            characterEditButton.OnPressed += args => { new CharacterSetup(localization, preferencesManager, entityManager).OpenCentered(); };
 
             var summaryLabel = new Label
                 {Text = ((HumanoidCharacterProfile) preferencesManager.Preferences.SelectedCharacter).Summary};

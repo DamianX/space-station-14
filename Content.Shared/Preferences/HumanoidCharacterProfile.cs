@@ -9,12 +9,12 @@ namespace Content.Shared.Preferences
         public HumanoidCharacterProfile(string name,
             int age,
             Sex sex,
-            HumanoidCharacterAppearance characterAppearance)
+            HumanoidCharacterAppearance appearance)
         {
             Name = name;
             Age = age;
             Sex = sex;
-            CharacterAppearance = characterAppearance;
+            Appearance = appearance;
         }
 
         public static HumanoidCharacterProfile Default()
@@ -25,21 +25,22 @@ namespace Content.Shared.Preferences
         public string Name { get; }
         public int Age { get; }
         public Sex Sex { get; }
-        public HumanoidCharacterAppearance CharacterAppearance { get; }
+        public ICharacterAppearance CharacterAppearance => Appearance;
+        public HumanoidCharacterAppearance Appearance { get; }
 
         public HumanoidCharacterProfile WithName(string name)
         {
-            return new HumanoidCharacterProfile(name, Age, Sex, CharacterAppearance);
+            return new HumanoidCharacterProfile(name, Age, Sex, Appearance);
         }
 
         public HumanoidCharacterProfile WithAge(int age)
         {
-            return new HumanoidCharacterProfile(Name, age, Sex, CharacterAppearance);
+            return new HumanoidCharacterProfile(Name, age, Sex, Appearance);
         }
 
         public HumanoidCharacterProfile WithSex(Sex sex)
         {
-            return new HumanoidCharacterProfile(Name, Age, sex, CharacterAppearance);
+            return new HumanoidCharacterProfile(Name, Age, sex, Appearance);
         }
 
         public HumanoidCharacterProfile WithCharacterAppearance(HumanoidCharacterAppearance appearance)
@@ -55,7 +56,7 @@ namespace Content.Shared.Preferences
             if (Name != other.Name) return false;
             if (Age != other.Age) return false;
             if (Sex != other.Sex) return false;
-            return CharacterAppearance.MemberwiseEquals(other.CharacterAppearance);
+            return Appearance.MemberwiseEquals(other.Appearance);
         }
     }
 }

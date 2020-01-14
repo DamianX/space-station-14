@@ -177,7 +177,7 @@ namespace Content.Server.Preferences
                 throw new NotImplementedException();
             }
 
-            var appearance = humanoid.CharacterAppearance;
+            var appearance = humanoid.Appearance;
             using (var connection = GetDbConnection())
             {
                 connection.Execute(SaveCharacterSlotQuery, new

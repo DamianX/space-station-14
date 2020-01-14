@@ -26,6 +26,7 @@ namespace Content.Client.UserInterface
         public ChatBox Chat { get; }
         public ItemList OnlinePlayerItemList { get; }
         public ServerInfo ServerInfo { get; }
+        public Button CharacterSetupButton { get; }
 
         public LobbyGui(IEntityManager entityManager,
             ILocalizationManager localization,
@@ -117,13 +118,15 @@ namespace Content.Client.UserInterface
             };
             vBox.AddChild(hBox);
 
+            CharacterSetupButton = new Button {Text = localization.GetString("Character setup")};
             hBox.AddChild(new VBoxContainer
             {
                 SizeFlagsHorizontal = SizeFlags.FillExpand,
                 SeparationOverride = 0,
                 Children =
                 {
-                    new CharacterSetupPanel(entityManager, localization, resourceCache, preferencesManager)
+                    CharacterSetupButton,
+                    new LobbyCharacterPreviewPanel(entityManager, localization, resourceCache, preferencesManager)
                     {
                         SizeFlagsHorizontal = SizeFlags.None
                     },
