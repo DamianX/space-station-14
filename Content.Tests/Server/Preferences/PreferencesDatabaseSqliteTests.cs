@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Content.Server.Database;
 using Content.Server.Preferences;
 using Content.Shared;
 using Content.Shared.Preferences;
@@ -39,39 +40,7 @@ namespace Content.Tests.Server.Preferences
 
         private static PreferencesDatabase GetDb()
         {
-            return new PreferencesDatabase(Path.GetTempFileName(), MaxCharacterSlots);
-        }
-
-        [Test]
-        public void TestUserDoesNotExist()
-        {
-            var db = GetDb();
-            Assert.Null(db.GetPlayerPreferences("[The database should be empty so any string should do]"));
-        }
-
-        [Test]
-        public void TestUserDoesExist()
-        {
-            var db = GetDb();
-            const string username = "bobby";
-            db.SaveSelectedCharacterIndex(username, 0);
-            var prefs = db.GetPlayerPreferences(username);
-            Assert.NotNull(prefs);
-            Assert.Zero(prefs.SelectedCharacterIndex);
-            Assert.That(prefs.Characters.ToList().TrueForAll(character => character is null));
-        }
-
-        [Test]
-        public void TestUpdateCharacter()
-        {
-            var db = GetDb();
-            const string username = "charlie";
-            const int slot = 0;
-            var originalProfile = CharlieCharlieson();
-            db.SaveSelectedCharacterIndex(username, slot);
-            db.SaveCharacterSlot(username, originalProfile, slot);
-            var prefs = db.GetPlayerPreferences(username);
-            Assert.That(prefs.Characters.ElementAt(slot).MemberwiseEquals(originalProfile));
+            return new PreferencesDatabase(new SqliteConfiguration(Path.GetTempFileName()), MaxCharacterSlots);
         }
 
         [Test]
@@ -102,6 +71,38 @@ namespace Content.Tests.Server.Preferences
             db.SaveSelectedCharacterIndex(username, MaxCharacterSlots);
             prefs = db.GetPlayerPreferences(username);
             Assert.AreEqual(prefs.SelectedCharacterIndex, MaxCharacterSlots - 1);
+        }
+
+        [Test]
+        public void TestUpdateCharacter()
+        {
+            var db = GetDb();
+            const string username = "charlie";
+            const int slot = 0;
+            var originalProfile = CharlieCharlieson();
+            db.SaveSelectedCharacterIndex(username, slot);
+            db.SaveCharacterSlot(username, originalProfile, slot);
+            var prefs = db.GetPlayerPreferences(username);
+            Assert.That(prefs.Characters.ElementAt(slot).MemberwiseEquals(originalProfile));
+        }
+
+        [Test]
+        public void TestUserDoesExist()
+        {
+            var db = GetDb();
+            const string username = "bobby";
+            db.SaveSelectedCharacterIndex(username, 0);
+            var prefs = db.GetPlayerPreferences(username);
+            Assert.NotNull(prefs);
+            Assert.Zero(prefs.SelectedCharacterIndex);
+            Assert.That(prefs.Characters.ToList().TrueForAll(character => character is null));
+        }
+
+        [Test]
+        public void TestUserDoesNotExist()
+        {
+            var db = GetDb();
+            Assert.Null(db.GetPlayerPreferences("[The database should be empty so any string should do]"));
         }
     }
 }

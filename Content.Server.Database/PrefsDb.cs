@@ -7,12 +7,9 @@ namespace Content.Server.Database
     {
         private readonly PreferencesDbContext _prefsCtx;
 
-        public PrefsDb(string dbPath)
+        public PrefsDb(IDatabaseConfiguration dbConfig)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<PreferencesDbContext>();
-            optionsBuilder.UseSqlite($"Data Source={dbPath}");
-
-            _prefsCtx = new PreferencesDbContext(optionsBuilder.Options);
+            _prefsCtx = new PreferencesDbContext(dbConfig.Options);
             _prefsCtx.Database.Migrate();
         }
 
