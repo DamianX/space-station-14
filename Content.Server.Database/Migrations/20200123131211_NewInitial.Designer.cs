@@ -4,17 +4,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Content.Server.Database.Migrations
 {
     [DbContext(typeof(PreferencesDbContext))]
-    [Migration("20200118195640_jobs")]
-    partial class jobs
+    [Migration("20200123131211_NewInitial")]
+    partial class NewInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.1.0");
 
             modelBuilder.Entity("Content.Server.Database.HumanoidProfile", b =>
@@ -49,6 +51,9 @@ namespace Content.Server.Database.Migrations
                     b.Property<string>("HairName")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("PreferenceUnavailable")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("PrefsId")
                         .HasColumnType("INTEGER");

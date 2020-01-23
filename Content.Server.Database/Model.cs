@@ -1,10 +1,16 @@
 ﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Content.Server.Database
 {
     public class PreferencesDbContext : DbContext
     {
+        private static readonly ILoggerFactory ConsoleLoggerFactory
+            = LoggerFactory.Create(builder => { builder.AddConsole(); });
+#pragma warning disable 649
+        private bool _loggingEnabled;
+#pragma warning restore 649
         // This is used by the "dotnet ef" CLI tool.
         public PreferencesDbContext() :
             base(new DbContextOptionsBuilder().UseSqlite("Data Source=:memory:").Options)
@@ -17,8 +23,16 @@ namespace Content.Server.Database
 
         public DbSet<Prefs> Preferences { get; set; } = null!;
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (_loggingEnabled)
+                optionsBuilder.UseLoggerFactory(ConsoleLoggerFactory);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.UseIdentityColumns();
+
             modelBuilder.Entity<Prefs>()
                 .HasIndex(p => p.Username)
                 .IsUnique();
@@ -76,6 +90,6 @@ namespace Content.Server.Database
     {
         // These enum values HAVE to match the ones in PreferenceUnavailableMode in Shared.
         StayInLobby = 0,
-        SpawnAsOverflow,
+        SpawnAsOverflow
     }
 }
