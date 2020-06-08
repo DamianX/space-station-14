@@ -1,0 +1,39 @@
+- type: entity
+  id: SecurityCamera
+  name: security camera
+  description: Big Brother is watching you.
+  components:
+  - type: SecurityCamera
+  - type: Physics
+    Anchored: true
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Sprite
+    sprite: Buildings/security_camera.rsi
+    state: normal
+  - type: Icon
+    sprite: Buildings/security_camera.rsi
+    state: normal
+  - type: Collidable
+    shapes:
+    - !type:PhysShapeAabb
+      bounds: "-0.5,-0.25,0.5,0.25"
+      layer:
+      - Opaque
+  - type: SnapGrid
+    offset: Center
+  - type: Damageable
+  - type: Breakable
+  - type: Appearance
+    visuals:
+    - type: SecurityCameraVisualizer2D
+  - type: UserInterface
+    interfaces:
+    - key: enum.WiresUiKey.Key
+      type: WiresBoundUserInterface
+  - type: PowerDevice
+    priority: Low
+  - type: Wires
+    BoardName: security camera
+    LayoutId: SecurityCamera
+  - type: Anchorable
