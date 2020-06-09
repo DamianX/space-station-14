@@ -217,3 +217,19 @@
     interfaces:
     - key: enum.SolarControlConsoleUiKey.Key
       type: SolarControlConsoleBoundUserInterface
+
+- type: entity
+  id: ComputerSecurityCamera
+  parent: ComputerBase
+  name: security camera console
+  components:
+  - type: Appearance
+    visuals:
+    - type: ComputerVisualizer2D
+      key: generic_key
+      screen: comm
+  - type: SecurityCameraConsole
+  - type: UserInterface
+    interfaces:
+    - key: enum.SecurityCameraConsoleUiKey.Key
+      type: SecurityCameraConsoleBoundUserInterface
