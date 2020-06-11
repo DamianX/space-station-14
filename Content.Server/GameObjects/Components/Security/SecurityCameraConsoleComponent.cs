@@ -1,8 +1,11 @@
-﻿using Content.Server.GameObjects.EntitySystems;
+﻿using System.Collections.Generic;
+using Content.Server.GameObjects.EntitySystems;
+using Content.Server.Interfaces;
 using Content.Shared.GameObjects.Components.Security;
 using Robust.Server.GameObjects.Components.UserInterface;
 using Robust.Server.Interfaces.GameObjects;
 using Robust.Shared.GameObjects;
+using Robust.Shared.IoC;
 
 namespace Content.Server.GameObjects.Components.Security
 {
@@ -22,7 +25,8 @@ namespace Content.Server.GameObjects.Components.Security
 
         private void OnUiMessage(ServerBoundUserInterfaceMessage obj)
         {
-
+            var msg = (SecurityCameraSelectedMessage) obj.Message;
+            IoCManager.Resolve<IServerNotifyManager>().PopupMessageCursor(obj.Session.AttachedEntity, msg.Identifier.ToString());
         }
 
 
@@ -35,6 +39,11 @@ namespace Content.Server.GameObjects.Components.Security
 
             _userInterface.Open(actor.playerSession);
 
+        }
+
+        public void UpdateState(Dictionary<string, List<SecurityCameraEntry>> cameras)
+        {
+            _userInterface.SetState(new SecurityCameraConsoleInterfaceState(cameras));
         }
     }
 }
