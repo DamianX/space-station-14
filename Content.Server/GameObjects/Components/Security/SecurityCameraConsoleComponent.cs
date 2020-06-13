@@ -5,6 +5,7 @@ using Content.Shared.GameObjects.Components.Security;
 using Robust.Server.GameObjects.Components.UserInterface;
 using Robust.Server.Interfaces.GameObjects;
 using Robust.Shared.GameObjects;
+using Robust.Shared.GameObjects.Systems;
 using Robust.Shared.IoC;
 
 namespace Content.Server.GameObjects.Components.Security
@@ -21,12 +22,17 @@ namespace Content.Server.GameObjects.Components.Security
             _userInterface = Owner.GetComponent<ServerUserInterfaceComponent>()
                 .GetBoundUserInterface(SecurityCameraConsoleUiKey.Key);
             _userInterface.OnReceiveMessage += OnUiMessage;
+            UpdateState(EntitySystem.Get<SecurityCameraConsoleEntitySystem>().Cameras);
         }
 
         private void OnUiMessage(ServerBoundUserInterfaceMessage obj)
         {
-            var msg = (SecurityCameraSelectedMessage) obj.Message;
-            IoCManager.Resolve<IServerNotifyManager>().PopupMessageCursor(obj.Session.AttachedEntity, msg.Identifier.ToString());
+            switch (obj.Message)
+            {
+                case SecurityCameraSelectedMessage msg:
+                    IoCManager.Resolve<IServerNotifyManager>().PopupMessageCursor(obj.Session.AttachedEntity, msg.Identifier.ToString());
+                    break;
+            }
         }
 
 
