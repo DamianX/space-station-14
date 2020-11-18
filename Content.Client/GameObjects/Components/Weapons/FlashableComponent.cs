@@ -127,7 +127,7 @@ namespace Content.Client.GameObjects.Components.Weapons
             var screenHandle = (DrawingHandleScreen) handle;
 
             screenHandle.DrawRect(
-                new UIBox2(0.0f, 0.0f, _displayManager.ScreenSize.X, _displayManager.ScreenSize.Y),
+                new UIBox2(0.0f, _displayManager.ScreenSize.X, _displayManager.ScreenSize.Y, 0.0f),
                 Color.White.WithAlpha(GetAlpha(elapsedTime / Duration))
                 );
         }

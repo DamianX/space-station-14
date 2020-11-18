@@ -120,11 +120,9 @@ namespace Content.Client.GameObjects.EntitySystems.DoAfter
             handle.UseShader(_shader);
             // If you want to make this less hard-coded be my guest
             var leftOffset = 2 * DoAfterBarScale;
-            var box = new UIBox2i(
-                leftOffset,
-                -2 + 2 * DoAfterBarScale,
+            var box = new UIBox2i(-2 + 2 * DoAfterBarScale,
             leftOffset + (int) (XPixelDiff * Ratio),
-            -2);
+            -2, leftOffset);
             handle.DrawRect(box, color);
         }
     }

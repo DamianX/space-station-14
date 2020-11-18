@@ -231,11 +231,9 @@ namespace Content.Client.GameObjects.EntitySystems.AI
                     if (!viewport.Contains(tile)) continue;
 
                     var screenTile = _eyeManager.WorldToScreen(tile);
-                    var box = new UIBox2(
-                        screenTile.X - 15.0f,
-                        screenTile.Y - 15.0f,
+                    var box = new UIBox2(screenTile.Y - 15.0f,
                         screenTile.X + 15.0f,
-                        screenTile.Y + 15.0f);
+                        screenTile.Y + 15.0f, screenTile.X - 15.0f);
 
                     screenHandle.DrawRect(box, _graphColors[chunk]);
                 }
@@ -291,11 +289,9 @@ namespace Content.Client.GameObjects.EntitySystems.AI
                     if (!viewport.Contains(tile)) continue;
 
                     var screenTile = _eyeManager.WorldToScreen(tile);
-                    var box = new UIBox2(
-                        screenTile.X - 15.0f,
-                        screenTile.Y - 15.0f,
+                    var box = new UIBox2(screenTile.Y - 15.0f,
                         screenTile.X + 15.0f,
-                        screenTile.Y + 15.0f);
+                        screenTile.Y + 15.0f, screenTile.X - 15.0f);
 
                     screenHandle.DrawRect(box, _cachedRegionColors[attachedEntity.Transform.GridID][region]);
                 }
@@ -342,11 +338,9 @@ namespace Content.Client.GameObjects.EntitySystems.AI
                         if (!viewport.Contains(tile)) continue;
 
                         var screenTile = _eyeManager.WorldToScreen(tile);
-                        var box = new UIBox2(
-                            screenTile.X - 15.0f,
-                            screenTile.Y - 15.0f,
+                        var box = new UIBox2(screenTile.Y - 15.0f,
                             screenTile.X + 15.0f,
-                            screenTile.Y + 15.0f);
+                            screenTile.Y + 15.0f, screenTile.X - 15.0f);
 
                         screenHandle.DrawRect(box, _regionColors[attachedEntity.Transform.GridID][chunk][region]);
                     }
@@ -366,11 +360,9 @@ namespace Content.Client.GameObjects.EntitySystems.AI
                     if (!viewport.Contains(position)) continue;
                     var screenTile = _eyeManager.WorldToScreen(position);
                     // worldHandle.DrawLine(position, nextWorld.Value, Color.Blue);
-                    var box = new UIBox2(
-                        screenTile.X - 15.0f,
-                        screenTile.Y - 15.0f,
+                    var box = new UIBox2(screenTile.Y - 15.0f,
                         screenTile.X + 15.0f,
-                        screenTile.Y + 15.0f);
+                        screenTile.Y + 15.0f, screenTile.X - 15.0f);
                     screenHandle.DrawRect(box, Color.Orange.WithAlpha(0.25f));
                 }
             }
@@ -391,11 +383,9 @@ namespace Content.Client.GameObjects.EntitySystems.AI
                     }
 
                     var screenTile = _eyeManager.WorldToScreen(tile);
-                    var box = new UIBox2(
-                        screenTile.X - 15.0f,
-                        screenTile.Y - 15.0f,
+                    var box = new UIBox2(screenTile.Y - 15.0f,
                         screenTile.X + 15.0f,
-                        screenTile.Y + 15.0f);
+                        screenTile.Y + 15.0f, screenTile.X - 15.0f);
 
                     screenHandle.DrawRect(box, new Color(
                         0.0f,
@@ -416,11 +406,9 @@ namespace Content.Client.GameObjects.EntitySystems.AI
                     if (!viewport.Contains(position)) continue;
                     var screenTile = _eyeManager.WorldToScreen(position);
                     // worldHandle.DrawLine(position, nextWorld.Value, Color.Blue);
-                    var box = new UIBox2(
-                        screenTile.X - 15.0f,
-                        screenTile.Y - 15.0f,
+                    var box = new UIBox2(screenTile.Y - 15.0f,
                         screenTile.X + 15.0f,
-                        screenTile.Y + 15.0f);
+                        screenTile.Y + 15.0f, screenTile.X - 15.0f);
                     screenHandle.DrawRect(box, Color.Orange.WithAlpha(0.25f));
                 }
             }
@@ -439,11 +427,9 @@ namespace Content.Client.GameObjects.EntitySystems.AI
                     }
 
                     var screenTile = _eyeManager.WorldToScreen(tile);
-                    var box = new UIBox2(
-                        screenTile.X - 15.0f,
-                        screenTile.Y - 15.0f,
+                    var box = new UIBox2(screenTile.Y - 15.0f,
                         screenTile.X + 15.0f,
-                        screenTile.Y + 15.0f);
+                        screenTile.Y + 15.0f, screenTile.X - 15.0f);
 
                     screenHandle.DrawRect(box, new Color(
                         0.0f,

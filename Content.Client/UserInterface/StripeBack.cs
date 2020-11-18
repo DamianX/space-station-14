@@ -101,13 +101,13 @@ namespace Content.Client.UserInterface
             if (HasTopEdge)
             {
                 centerBox += (0, (padSize + EdgeSize) * UIScale, 0, 0);
-                handle.DrawRect(new UIBox2(0, padSize * UIScale, PixelWidth, centerBox.Top), EdgeColor);
+                handle.DrawRect(new UIBox2(padSize * UIScale, PixelWidth, centerBox.Top, 0), EdgeColor);
             }
 
             if (HasBottomEdge)
             {
                 centerBox += (0, 0, 0, -((padSize + EdgeSize) * UIScale));
-                handle.DrawRect(new UIBox2(0, centerBox.Bottom, PixelWidth, PixelHeight - padSize * UIScale), EdgeColor);
+                handle.DrawRect(new UIBox2(centerBox.Bottom, PixelWidth, PixelHeight - padSize * UIScale, 0), EdgeColor);
             }
 
             GetActualStyleBox()?.Draw(handle, centerBox);

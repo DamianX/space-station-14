@@ -466,7 +466,7 @@ namespace Content.Client.GameObjects.Components.Wires
                     t *= UIScale;
                     b *= UIScale;
 
-                    var rect = new UIBox2(l, t, r, b);
+                    var rect = new UIBox2(t, r, b, l);
                     if (_isCut)
                     {
                         var copper = Color.Orange;
