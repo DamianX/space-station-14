@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -129,7 +130,7 @@ namespace Content.Server.Database
 
         private static HumanoidCharacterProfile ConvertProfiles(Profile profile)
         {
-            var jobs = profile.Jobs.ToDictionary(j => j.JobName, j => (JobPriority) j.Priority);
+            var jobs = profile.Jobs.ToImmutableDictionary(j => j.JobName, j => (JobPriority) j.Priority);
             var antags = profile.Antags.Select(a => a.AntagName);
 
             var sex = Sex.Male;
@@ -166,7 +167,7 @@ namespace Content.Server.Database
                 backpack,
                 jobs,
                 (PreferenceUnavailableMode) profile.PreferenceUnavailable,
-                antags.ToList()
+                antags.ToImmutableList()
             );
         }
 

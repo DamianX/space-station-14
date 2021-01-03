@@ -62,11 +62,11 @@ namespace Content.Server.GameObjects.Components
 
                     if (msg.IsFacialHair)
                     {
-                        looks.Appearance = looks.Appearance.WithFacialHairStyleName(msg.HairName);
+                        looks.Appearance = looks.Appearance with {FacialHairStyleName = msg.HairName};
                     }
                     else
                     {
-                        looks.Appearance = looks.Appearance.WithHairStyleName(msg.HairName);
+                        looks.Appearance = looks.Appearance with {HairStyleName = msg.HairName};
                     }
 
                     break;
@@ -77,11 +77,11 @@ namespace Content.Server.GameObjects.Components
 
                     if (msg.IsFacialHair)
                     {
-                        looks.Appearance = looks.Appearance.WithFacialHairColor(color);
+                        looks.Appearance = looks.Appearance with {FacialHairColor = color};
                     }
                     else
                     {
-                        looks.Appearance = looks.Appearance.WithHairColor(color);
+                        looks.Appearance = looks.Appearance with {HairColor = color};
                     }
 
                     break;

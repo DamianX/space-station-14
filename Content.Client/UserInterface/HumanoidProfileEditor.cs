@@ -265,8 +265,10 @@ namespace Content.Client.UserInterface
                     {
                         if (Profile is null)
                             return;
-                        Profile = Profile.WithCharacterAppearance(
-                            Profile.Appearance.WithHairStyleName(newStyle));
+                        Profile = Profile with
+                        {
+                            HumanoidAppearance = Profile.HumanoidAppearance with {HairStyleName = newStyle}
+                        };
                         IsDirty = true;
                     };
 
@@ -274,8 +276,10 @@ namespace Content.Client.UserInterface
                     {
                         if (Profile is null)
                             return;
-                        Profile = Profile.WithCharacterAppearance(
-                            Profile.Appearance.WithHairColor(newColor));
+                        Profile = Profile with
+                        {
+                            HumanoidAppearance = Profile.HumanoidAppearance with {HairColor = newColor}
+                        };
                         IsDirty = true;
                     };
 
@@ -286,8 +290,10 @@ namespace Content.Client.UserInterface
                     {
                         if (Profile is null)
                             return;
-                        Profile = Profile.WithCharacterAppearance(
-                            Profile.Appearance.WithFacialHairStyleName(newStyle));
+                        Profile = Profile with
+                        {
+                            HumanoidAppearance = Profile.HumanoidAppearance with {FacialHairStyleName = newStyle}
+                        };
                         IsDirty = true;
                     };
 
@@ -295,8 +301,10 @@ namespace Content.Client.UserInterface
                     {
                         if (Profile is null)
                             return;
-                        Profile = Profile.WithCharacterAppearance(
-                            Profile.Appearance.WithFacialHairColor(newColor));
+                        Profile = Profile with
+                        {
+                            HumanoidAppearance = Profile.HumanoidAppearance with {FacialHairColor = newColor}
+                        };
                         IsDirty = true;
                     };
 
@@ -402,7 +410,9 @@ namespace Content.Client.UserInterface
                 {
                     _preferenceUnavailableButton.SelectId(args.Id);
 
-                    Profile = Profile.WithPreferenceUnavailable((PreferenceUnavailableMode) args.Id);
+                    Profile = Profile with {
+                        PreferenceUnavailable = (PreferenceUnavailableMode) args.Id
+                    };
                     IsDirty = true;
                 };
 
@@ -457,7 +467,10 @@ namespace Content.Client.UserInterface
 
                         selector.PriorityChanged += priority =>
                         {
-                            Profile = Profile.WithJobPriority(job.ID, priority);
+                            Profile = Profile with
+                            {
+                                JobPriorities = Profile.JobPriorities.SetItem(job.ID, priority)
+                            };
                             IsDirty = true;
 
                             foreach (var jobSelector in _jobPriorities)
@@ -474,7 +487,11 @@ namespace Content.Client.UserInterface
                                     if (jobSelector.Job != selector.Job && jobSelector.Priority == JobPriority.High)
                                     {
                                         jobSelector.Priority = JobPriority.Medium;
-                                        Profile = Profile.WithJobPriority(jobSelector.Job.ID, JobPriority.Medium);
+                                        Profile = Profile with
+                                        {
+                                            JobPriorities = Profile.JobPriorities.SetItem(jobSelector.Job.ID,
+                                                JobPriority.Medium)
+                                        };
                                     }
                                 }
                             }
@@ -669,37 +686,37 @@ namespace Content.Client.UserInterface
 
         private void SetAge(int newAge)
         {
-            Profile = Profile?.WithAge(newAge);
+            Profile = Profile with {Age = newAge};
             IsDirty = true;
         }
 
         private void SetSex(Sex newSex)
         {
-            Profile = Profile?.WithSex(newSex);
+            Profile = Profile with {Sex = newSex};
             IsDirty = true;
         }
 
         private void SetGender(Gender newGender)
         {
-            Profile = Profile?.WithGender(newGender);
+            Profile = Profile with {Gender = newGender};
             IsDirty = true;
         }
 
         private void SetName(string newName)
         {
-            Profile = Profile?.WithName(newName);
+            Profile = Profile with {Name = newName};
             IsDirty = true;
         }
 
         private void SetClothing(ClothingPreference newClothing)
         {
-            Profile = Profile?.WithClothingPreference(newClothing);
+            Profile = Profile with {Clothing = newClothing};
             IsDirty = true;
         }
 
         private void SetBackpack(BackpackPreference newBackpack)
         {
-            Profile = Profile?.WithBackpackPreference(newBackpack);
+            Profile = Profile with {Backpack = newBackpack};
             IsDirty = true;
         }
 
@@ -765,11 +782,11 @@ namespace Content.Client.UserInterface
         private void UpdateHairPickers()
         {
             _hairPicker.SetData(
-                Profile.Appearance.HairColor,
-                Profile.Appearance.HairStyleName);
+                Profile.HumanoidAppearance.HairColor,
+                Profile.HumanoidAppearance.HairStyleName);
             _facialHairPicker.SetData(
-                Profile.Appearance.FacialHairColor,
-                Profile.Appearance.FacialHairStyleName);
+                Profile.HumanoidAppearance.FacialHairColor,
+                Profile.HumanoidAppearance.FacialHairStyleName);
         }
 
         private void UpdateSaveButton()

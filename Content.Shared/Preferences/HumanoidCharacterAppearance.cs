@@ -10,59 +10,15 @@ using Robust.Shared.Serialization;
 namespace Content.Shared.Preferences
 {
     [Serializable, NetSerializable]
-    public class HumanoidCharacterAppearance : ICharacterAppearance
+    public record HumanoidCharacterAppearance(
+        string HairStyleName,
+        Color HairColor,
+        string FacialHairStyleName,
+        Color FacialHairColor,
+        Color EyeColor,
+        Color SkinColor)
+        : ICharacterAppearance
     {
-        public HumanoidCharacterAppearance(string hairStyleName,
-            Color hairColor,
-            string facialHairStyleName,
-            Color facialHairColor,
-            Color eyeColor,
-            Color skinColor)
-        {
-            HairStyleName = hairStyleName;
-            HairColor = ClampColor(hairColor);
-            FacialHairStyleName = facialHairStyleName;
-            FacialHairColor = ClampColor(facialHairColor);
-            EyeColor = ClampColor(eyeColor);
-            SkinColor = ClampColor(skinColor);
-        }
-
-        public string HairStyleName { get; }
-        public Color HairColor { get; }
-        public string FacialHairStyleName { get; }
-        public Color FacialHairColor { get; }
-        public Color EyeColor { get; }
-        public Color SkinColor { get; }
-
-        public HumanoidCharacterAppearance WithHairStyleName(string newName)
-        {
-            return new(newName, HairColor, FacialHairStyleName, FacialHairColor, EyeColor, SkinColor);
-        }
-
-        public HumanoidCharacterAppearance WithHairColor(Color newColor)
-        {
-            return new(HairStyleName, newColor, FacialHairStyleName, FacialHairColor, EyeColor, SkinColor);
-        }
-
-        public HumanoidCharacterAppearance WithFacialHairStyleName(string newName)
-        {
-            return new(HairStyleName, HairColor, newName, FacialHairColor, EyeColor, SkinColor);
-        }
-
-        public HumanoidCharacterAppearance WithFacialHairColor(Color newColor)
-        {
-            return new(HairStyleName, HairColor, FacialHairStyleName, newColor, EyeColor, SkinColor);
-        }
-
-        public HumanoidCharacterAppearance WithEyeColor(Color newColor)
-        {
-            return new(HairStyleName, HairColor, FacialHairStyleName, FacialHairColor, newColor, SkinColor);
-        }
-
-        public HumanoidCharacterAppearance WithSkinColor(Color newColor)
-        {
-            return new(HairStyleName, HairColor, FacialHairStyleName, FacialHairColor, EyeColor, newColor);
-        }
 
         public static HumanoidCharacterAppearance Default()
         {

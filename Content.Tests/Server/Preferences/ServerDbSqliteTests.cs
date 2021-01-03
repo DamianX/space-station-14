@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Content.Server.Database;
@@ -40,9 +41,9 @@ namespace Content.Tests.Server.Preferences
                 new Dictionary<string, JobPriority>
                 {
                     {SharedGameTicker.OverflowJob, JobPriority.High}
-                },
+                }.ToImmutableDictionary(),
                 PreferenceUnavailableMode.StayInLobby,
-                new List<string> ()
+                ImmutableList<string>.Empty
             );
         }
 

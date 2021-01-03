@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Content.Server.Database;
@@ -266,13 +267,10 @@ namespace Content.Server.Preferences
                 {
                     case HumanoidCharacterProfile hp:
                     {
-                        newProf = hp
-                            .WithJobPriorities(
-                                hp.JobPriorities.Where(job =>
-                                    _protos.HasIndex<JobPrototype>(job.Key)))
-                            .WithAntagPreferences(
-                                hp.AntagPreferences.Where(antag =>
-                                    _protos.HasIndex<AntagPrototype>(antag)));
+                        newProf = hp with {
+                                JobPriorities = hp.JobPriorities.Where(job => _protos.HasIndex<JobPrototype>(job.Key)).ToImmutableDictionary(),
+                                AntagPreferences = hp.AntagPreferences.Where(antag => _protos.HasIndex<AntagPrototype>(antag)).ToImmutableList()
+                            };
                         break;
                     }
                     default:
